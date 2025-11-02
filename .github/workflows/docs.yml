@@ -7,6 +7,11 @@ on:
     # Only run if files in the 'docs' directory have changed
     paths:
       - 'docs/**'
+  pull_request:
+    branches:
+      - main
+    paths:
+      - 'docs/**'
 
 permissions:
   contents: read

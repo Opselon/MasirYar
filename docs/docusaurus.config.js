@@ -9,18 +9,15 @@ const darkTheme = themes.dracula;
 const config = {
   title: 'Personal Growth Platform',
   tagline: 'Microservices Documentation',
-  // TODO: Update with your GitHub Pages URL
-  url: 'https://github.com',
-  baseUrl: '/',
+  url: 'https://opselon.github.io',
+  baseUrl: '/MasirYar/',
   onBrokenLinks: 'throw',
   onBrokenMarkdownLinks: 'warn',
   favicon: 'img/favicon.ico',
 
   // GitHub pages deployment config.
-  // TODO: Update with your GitHub org/user name.
-  organizationName: 'your-github-username',
-  // TODO: Update with your repo name.
-  projectName: 'personal-growth-platform',
+  organizationName: 'Opselon',
+  projectName: 'MasirYar',
 
   presets: [
     [
@@ -29,8 +26,7 @@ const config = {
       ({
         docs: {
           sidebarPath: require.resolve('./sidebars.js'),
-          // TODO: Update with your repo URL
-          editUrl: 'https://github.com/your-github-username/personal-growth-platform/tree/main/docs/',
+          editUrl: 'https://github.com/Opselon/MasirYar/tree/main/docs/',
         },
         blog: false, // Disable the blog plugin
         theme: {
@@ -57,8 +53,7 @@ const config = {
             label: 'Docs',
           },
           {
-            // TODO: Update with your repo URL
-            href: 'https://github.com/your-github-username/personal-growth-platform',
+            href: 'https://github.com/Opselon/MasirYar',
             label: 'GitHub',
             position: 'right',
           },
@@ -98,8 +93,7 @@ const config = {
             items: [
               {
                 label: 'GitHub',
-                // TODO: Update with your repo URL
-                href: 'https://github.com/your-github-username/personal-growth-platform',
+                href: 'https://github.com/Opselon/MasirYar',
               },
             ],
           },
