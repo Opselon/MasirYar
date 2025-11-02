@@ -3,6 +3,7 @@ using System.Text;
 using Core.Entities;
 using Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using RabbitMQ.Client;
 

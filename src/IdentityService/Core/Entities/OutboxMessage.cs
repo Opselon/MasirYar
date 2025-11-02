@@ -11,7 +11,11 @@ public class OutboxMessage
     public string? Error { get; set; }
 
     // Private constructor for EF Core
-    private OutboxMessage() { }
+    private OutboxMessage()
+    {
+        Type = string.Empty;
+        Content = string.Empty;
+    }
 
     public OutboxMessage(string type, string content)
     {
