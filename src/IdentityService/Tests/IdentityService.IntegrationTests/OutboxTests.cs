@@ -10,11 +10,11 @@ using Xunit;
 
 namespace IdentityService.IntegrationTests;
 
-public class OutboxTests : IClassFixture<WebApplicationFactory<Program>>
+public class OutboxTests : IClassFixture<ApiFactory>
 {
-    private readonly WebApplicationFactory<Program> _factory;
+    private readonly ApiFactory _factory;
 
-    public OutboxTests(WebApplicationFactory<Program> factory)
+    public OutboxTests(ApiFactory factory)
     {
         _factory = factory;
     }

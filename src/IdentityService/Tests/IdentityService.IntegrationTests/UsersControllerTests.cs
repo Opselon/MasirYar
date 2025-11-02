@@ -33,12 +33,16 @@ public class ApiFactory : WebApplicationFactory<Program>, IAsyncLifetime
         .WithPassword("testpass")
         .Build();
 
-    // این متد برای پیکربندی WebHost قبل از ساخت برنامه استفاده می‌شود.
+    // این متد برای پیکربNazi WebHost قبل از ساخت برنامه استفاده می‌شود.
     protected override void ConfigureWebHost(IWebHostBuilder builder)
     {
         // رشته اتصال پیش‌فرض را با رشته اتصال کانتینر PostgreSQL جایگزین می‌کنیم.
-        builder.ConfigureAppConfiguration(config =>
+        builder.ConfigureAppConfiguration((context, config) =>
         {
+            // Load test settings
+            config.AddJsonFile("appsettings.json");
+
+            // Override connection string with the one from Testcontainers
             config.AddInMemoryCollection(new Dictionary<string, string?>
             {
                 ["ConnectionStrings:DefaultConnection"] = _dbContainer.GetConnectionString()
