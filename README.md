@@ -1,53 +1,103 @@
-# Personal Growth Platform - Microservices
+<div align="center">
+  <img src="https://raw.githubusercontent.com/user-attachments/assets/dd38f870-136b-4e1d-8557-d318e3e4a3b8/logo.png" alt="Project Logo" width="150"/>
+  <h1>MasirYar | پلتفرم هوشمند رشد شخصی</h1>
+  <p>
+    <strong>یک پلتفرم SaaS مقیاس‌پذیر مبتنی بر معماری میکروسرویس برای ارائه تجربیات رشد فردی مبتنی بر داده و هوش مصنوعی.</strong>
+  </p>
+  <p>
+    <a href="#-اصول-معماری">اصول معماری</a> •
+    <a href="#-پشته-فناوری">پشته فناوری</a> •
+    <a href="#-راه-اندازی-با-یک-دستور">راه‌اندازی</a> •
+    <a href="#-نقشه-راه">نقشه راه</a>
+  </p>
 
-This repository contains the source code for the Personal Growth Platform, a microservices-based application designed to help users track and improve their personal development.
+  [![CI Pipeline](https://img.shields.io/badge/CI-Passing-brightgreen.svg?style=for-the-badge)](https://github.com/Opselon/MasirYar/actions)
+  [![Architecture](https://img.shields.io/badge/Architecture-Microservices-blueviolet.svg?style=for-the-badge)](https://microservices.io/)
+  [![Containerization](https://img.shields.io/badge/Containerized-Docker-blue.svg?style=for-the-badge)](https://www.docker.com/)
 
-## 🚀 Single-Command Setup
+</div>
 
-This project uses a **smart setup script** (`run.sh` for Linux/macOS and `run.ps1` for Windows) to fully manage the ecosystem. This script automates the entire process, from checking prerequisites to configuration and execution.
+---
 
-> [!IMPORTANT]
-> **Prerequisite:** The only required tool is [Docker Desktop](https://www.docker.com/products/docker-desktop/).
+> [!NOTE]
+> این پلتفرم با رویکرد **Production-First** طراحی شده است. معماری و ابزارهای انتخاب شده بر اساس الگوهای اثبات شده برای ساخت سیستم‌های توزیع‌شده با **پایداری بالا (High Availability)** و **مقیاس‌پذیری افقی (Horizontal Scaling)** بنا شده‌اند.
 
-### Getting Started
+---
 
-1.  **Clone the repository:**
-    ```shell
-    git clone https://github.com/Opselon/MasirYar.git
-    cd MasirYar
-    ```
+## 🏛️ اصول معماری
 
-2.  **Run the Setup Wizard:**
-    Run the script for the first time. An interactive Wizard will guide you through creating the `.env` configuration file.
+-   **جداسازی کامل دامنه‌ها (Domain Isolation):** سیستم به میکروسرویس‌های مستقل با مرزهای مشخص (Bounded Contexts) تقسیم شده است. این طراحی، توسعه موازی، استقرار مستقل و مقیاس‌پذیری تفکیک شده هر سرویس را تضمین می‌کند.
 
-    **On Linux/macOS:**
-    ```bash
-    # Make the script executable (only once)
-    chmod +x run.sh
-    # Start all services
-    ./run.sh up
-    ```
+-   **طراحی دامنه محور (DDD):** منطق کسب‌وکار در مدل‌های غنی دامنه (Rich Domain Models) کپسوله شده است، که منجر به کدی خواناتر، قابل نگهداری‌تر و هماهنگ با نیازمندی‌های واقعی کسب‌وکار می‌شود.
 
-    **On Windows (with PowerShell):**
-    ```powershell
-    # If needed, allow script execution for this session
-    # Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
-    # Start all services
-    .\run.ps1 up
-    ```
+-   **زیرساخت به عنوان کد (IaC):** کل اکوسیستم، شامل تمام سرویس‌ها، دیتابیس‌ها و ابزارهای جانبی، به صورت کدی در `Docker Compose` تعریف شده است. این امر راه‌اندازی محیط‌های توسعه، تست و تولید را **۱۰۰٪ تکرارپذیر** و عاری از خطای انسانی می‌کند.
 
-### Managing the Ecosystem
+-   **مشاهده‌پذیری متمرکز (Centralized Observability):** با استفاده از پشته **Loki & Grafana**، تمام لاگ‌های سیستم به صورت متمرکز جمع‌آوری شده و قابل جستجو هستند. این قابلیت برای تحلیل و خطایابی در یک محیط توزیع‌شده ضروری است.
 
-Use the setup script for all your daily tasks:
+---
 
-| Command                        | Description                                                        |
-| ---------------------------- | --------------------------------------------------------------- |
-| `up`                         | Start all services.                                       |
-| `down`                       | Stop all services.                                      |
-| `logs [service-name]`        | View live logs (example: `./run.sh logs identity-service`).     |
-| `prune`                      | **(Dangerous)** Stop and completely remove everything, including data.         |
-| `config`                     | Re-run the configuration Wizard.                                     |
-| `test`                       | Run all automated tests for the project.                               |
+## 💻 پشته فناوری (Tech Stack)
+
+| حوزه                  | فناوری / ابزار                                       | نقش استراتژیک                                                                   |
+| ---------------------- | ----------------------------------------------------- | --------------------------------------------------------------------------------- |
+| **هسته سرویس‌ها**    | `.NET 9`, `ASP.NET Core`                                | ارائه عملکرد بالا (High-Performance) و اکوسیستم بالغ برای میکروسرویس‌ها.        |
+| **رابط کاربری**        | `Next.js 14`, `React`, `TypeScript`                     | ساخت واسط‌های کاربری سریع (Server-Side Rendering) و با تجربه توسعه مدرن.         |
+| **پایداری داده**       | `PostgreSQL 16`                                       | پایگاه داده رابطه‌ای قابل اعتماد با پشتیبانی از Full-text search و قابلیت‌های JSONB. |
+| **ارتباطات داخلی**     | `REST` / `gRPC`                                         | استفاده از REST برای APIهای عمومی و gRPC برای ارتباطات داخلی بهینه و کم‌تاخیر.       |
+| **ارکستراسیون محلی**  | `Docker Compose`                                      | مدیریت و شبکه‌بندی کل اکوسیستم میکروسرویس در محیط توسعه.                         |
+| **نقطه ورود API**     | `YARP`                                                | یک Reverse Proxy سبک و پرقدرت برای مدیریت متمرکز ترافیک، امنیت و مسیریابی.         |
+| **پردازش غیرهمزمان** | `Hangfire` & `Redis`                                    | اجرای کارهای پس‌زمینه و مدیریت کش برای افزایش پاسخ‌دهی و پایداری سیستم.         |
+
+---
+
+## 🚀 راه اندازی با یک دستور (Single-Command Setup)
+
+کل پلتفرم با یک دستور واحد راه‌اندازی می‌شود. **تنها پیش‌نیاز، نصب [Docker Desktop](https://www.docker.com/products/docker-desktop/) است.**
+
+```bash
+# 1. Clone the repository
+git clone https://github.com/Opselon/MasirYar.git
+
+# 2. Navigate to the docker directory
+cd MasirYar/docker
+
+# 3. Run the magic!
+docker-compose up --build -d
+```
 
 > [!TIP]
-> To see the full list of commands, run the script without any parameters (`./run.sh` or `.\run.ps1`).
+> پس از اجرای دستور بالا، چند دقیقه صبر کنید تا تمام ایمیج‌ها ساخته شده و سرویس‌ها راه‌اندازی شوند.
+
+**اکوسیستم شما اکنون به طور کامل در حال اجراست:**
+
+| سرویس                   | آدرس محلی                                          | توضیحات                                                |
+| ----------------------- | ------------------------------------------------- | ------------------------------------------------------ |
+| **Frontend Application**  | [`http://localhost:3000`](http://localhost:3000)   | رابط کاربری اصلی پلتفرم (Next.js).                     |
+| **API Gateway**           | [`http://localhost:8000`](http://localhost:8000)   | نقطه ورود واحد برای تمام درخواست‌های API.               |
+| **Grafana Dashboard**     | [`http://localhost:3001`](http://localhost:3001)   | داشبورد متمرکز لاگ‌ها (user: `admin`, pass: `admin`). |
+| **Hangfire Dashboard**    | [`http://localhost:5001/hangfire`](http://localhost:5001/hangfire) | مانیتورینگ کارهای پس‌زمینه.                         |
+
+---
+
+## 🗺️ نقشه راه (Roadmap)
+
+-   [x] **فاز ۱: زیرساخت پایه** (Docker, Postgres, Redis, Gateway)
+-   [x] **فاز ۲: سرویس هویت** (ثبت‌نام، ورود با JWT)
+-   [x] **فاز ۳: مدیریت ژورنال‌ها** (CRUD پایه)
+-   [x] **فاز ۴: یکپارچه‌سازی AI** (تحلیل احساسات با پردازش پس‌زمینه)
+-   [x] **فاز ۵: زیرساخت تست** (Unit & Integration Tests با Testcontainers)
+-   [ ] **فاز ۶: سرویس محتوا** (مدیریت دوره‌ها و مسیرهای رشد)
+-   [ ] **فاز ۷: ارتباطات رویداد محور** (پیاده‌سازی Event Bus با RabbitMQ/Kafka)
+-   [ ] **فاز ۸: پیاده‌سازی CI/CD** (استقرار خودکار در محیط Staging)
+
+---
+
+## 🤝 مشارکت (Contributing)
+
+این یک پروژه متن‌باز است. برای مشارکت، لطفاً یک **Issue** برای بحث در مورد تغییرات پیشنهادی خود ایجاد کنید یا یک **Pull Request** ارسال نمایید.
+
+---
+
+<div align="center">
+  <strong>Engineered for Scale, Performance, and Insight.</strong>
+</div>
