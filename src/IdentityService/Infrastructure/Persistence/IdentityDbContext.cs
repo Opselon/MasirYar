@@ -12,6 +12,7 @@ public class IdentityDbContext : DbContext
 
     public DbSet<User> Users { get; set; }
     public DbSet<Journal> Journals { get; set; }
+    public DbSet<OutboxMessage> OutboxMessages { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
