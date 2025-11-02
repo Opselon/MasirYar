@@ -1,0 +1,75 @@
+// protos/identity.proto
+syntax = "proto3";
+
+// نام پکیج برای کدهای تولید شده
+package identity;
+
+// تعریف سرویس Identity
+service IdentityGrpc {
+  // متد ثبت‌نام کاربر
+  rpc RegisterUser (RegisterUserRequest) returns (RegisterUserResponse);
+  
+  // متد ورود کاربر
+  rpc LoginUser (LoginUserRequest) returns (LoginUserResponse);
+  
+  // متد دریافت یک کاربر بر اساس شناسه
+  rpc GetUserById (GetUserByIdRequest) returns (GetUserByIdResponse);
+  
+  // متد دریافت چند کاربر به صورت Batch (برای حل مشکل N+1 Query)
+  rpc GetUsersByIds (GetUsersByIdsRequest) returns (GetUsersByIdsResponse);
+}
+
+// پیام درخواست ثبت‌نام
+message RegisterUserRequest {
+  string username = 1;
+  string email = 2;
+  string password = 3;
+}
+
+// پیام پاسخ ثبت‌نام
+message RegisterUserResponse {
+  string user_id = 1;
+}
+
+// پیام درخواست ورود
+message LoginUserRequest {
+  string username = 1;
+  string password = 2;
+}
+
+// پیام پاسخ ورود
+message LoginUserResponse {
+  string token = 1;
+  string user_id = 2;
+  string username = 3;
+}
+
+// پیام درخواست دریافت کاربر
+message GetUserByIdRequest {
+  string user_id = 1;
+}
+
+// پیام پاسخ دریافت کاربر
+message GetUserByIdResponse {
+  string user_id = 1;
+  string username = 2;
+  string email = 3;
+}
+
+// پیام درخواست دریافت چند کاربر
+message GetUsersByIdsRequest {
+  repeated string user_ids = 1; // لیست شناسه‌های کاربر
+}
+
+// پیام پاسخ دریافت چند کاربر
+message GetUsersByIdsResponse {
+  repeated UserInfo users = 1;
+}
+
+// اطلاعات کاربر
+message UserInfo {
+  string user_id = 1;
+  string username = 2;
+  string email = 3;
+}
+

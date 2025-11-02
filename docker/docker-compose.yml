@@ -1,0 +1,165 @@
+# نسخه فایل docker-compose که از آن استفاده می‌کنیم. نسخه 3.8 امکانات خوبی دارد.
+version: '3.8'
+
+# بخش تعریف سرویس‌ها (کانتینرها)
+services:
+  # ------ زیرساخت ------
+  postgres-db:
+    # از آخرین ایمیج رسمی PostgreSQL نسخه 16 استفاده می‌کنیم.
+    image: postgres:16
+    # نام کانتینر را برای دسترسی راحت‌تر، postgres-db قرار می‌دهیم.
+    container_name: personalgrowth_postgres
+    # تنظیمات محیطی برای راه‌اندازی اولیه PostgreSQL
+    environment:
+      - POSTGRES_USER=admin      # نام کاربری مدیر دیتابیس
+      - POSTGRES_PASSWORD=secret # رمز عبور (در محیط واقعی باید امن‌تر باشد)
+      - POSTGRES_DB=PersonalGrowthDb # نام دیتابیس اصلی که ساخته می‌شود
+    # نگاشت (Map) پورت: پورت 5432 داخل کانتینر را به پورت 5433 روی سیستم میزبان متصل می‌کنیم.
+    # از پورت 5433 استفاده می‌کنیم تا با PostgreSQL محلی روی سیستم شما تداخل نداشته باشد.
+    ports:
+      - "5433:5432"
+    # تعریف یک Volume برای نگهداری دائمی داده‌های دیتابیس.
+    # با این کار، حتی اگر کانتینر حذف شود، داده‌ها روی سیستم میزبان باقی می‌مانند.
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    # خط مشی ریستارت: همیشه کانتینر را در صورت توقف ناخواسته، مجدداً راه‌اندازی کن.
+    restart: always
+
+  # ------ سرویس کش Redis ------
+  redis-cache:
+    # از آخرین ایمیج رسمی Redis استفاده می‌کنیم.
+    image: redis:latest
+    # نام کانتینر را redis-cache قرار می‌دهیم.
+    container_name: personalgrowth_redis
+    # نگاشت پورت: پورت 6379 داخل کانتینر را به پورت 6379 روی سیستم میزبان متصل می‌کنیم.
+    ports:
+      - "6379:6379"
+    # تعریف یک Volume برای نگهداری داده‌های Redis (در صورت نیاز به پایداری)
+    volumes:
+      - redis_data:/data
+    # خط مشی ریستارت: همیشه کانتینر را ریستارت کن.
+    restart: always
+    logging:
+      driver: "json-file"
+      options:
+        labels: "service=redis"
+
+  # ------ Observability (مشاهده‌پذیری) ------
+  loki:
+    image: grafana/loki:2.9.0
+    container_name: personalgrowth_loki
+    ports:
+      - "3100:3100"
+    command: -config.file=/etc/loki/local-config.yaml
+    restart: always
+    logging:
+      driver: "json-file"
+      options:
+        labels: "service=loki"
+
+  grafana:
+    image: grafana/grafana:latest
+    container_name: personalgrowth_grafana
+    ports:
+      # داشبورد Grafana روی پورت 3001 در دسترس خواهد بود
+      - "3001:3000"
+    volumes:
+      - grafana_data:/var/lib/grafana
+      - ./grafana-provisioning:/etc/grafana/provisioning
+    environment:
+      - GF_SECURITY_ADMIN_USER=admin
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+      - GF_USERS_ALLOW_SIGN_UP=false
+    depends_on:
+      - loki
+    restart: always
+    logging:
+      driver: "json-file"
+      options:
+        labels: "service=grafana"
+
+  # ------ میکروسرویس‌ها ------
+  identity-service:
+    build:
+      context: ../src/IdentityService
+      dockerfile: Dockerfile
+    container_name: personalgrowth_identity_service
+    # دیگر نیازی به نگاشت پورت به بیرون نیست، چون Gateway با آن صحبت می‌کند
+    depends_on:
+      - postgres-db
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:8080
+      - ConnectionStrings__DefaultConnection=Host=postgres-db;Port=5432;Database=PersonalGrowthDb;Username=admin;Password=secret
+      - Jwt__SecretKey=YourSuperSecretKeyThatShouldBeAtLeast32CharactersLong!
+      - Jwt__Issuer=IdentityService
+      - Jwt__Audience=IdentityService
+      - Jwt__ExpirationMinutes=60
+    restart: always
+    logging:
+      driver: "json-file"
+      options:
+        labels: "service=identity-service"
+
+  coaching-service:
+    build:
+      context: ../src/CoachingService
+      dockerfile: Dockerfile
+    container_name: personalgrowth_coaching_service
+    depends_on:
+      - postgres-db
+      - identity-service
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:8080
+      - ConnectionStrings__DefaultConnection=Host=postgres-db;Port=5432;Database=PersonalGrowthDb;Username=admin;Password=secret
+      - IdentityService__Url=http://identity-service:8080
+    restart: always
+    logging:
+      driver: "json-file"
+      options:
+        labels: "service=coaching-service"
+
+  # ------ نقطه ورود و کلاینت ------
+  api-gateway:
+    build:
+      context: ../src/ApiGateway/ApiGateway
+      dockerfile: Dockerfile
+    container_name: personalgrowth_api_gateway
+    ports:
+      # Gateway روی پورت 8000 در دسترس خواهد بود
+      - "8000:8080"
+    depends_on:
+      - identity-service
+      - coaching-service
+    restart: always
+    logging:
+      driver: "json-file"
+      options:
+        labels: "service=api-gateway"
+
+  frontend-web:
+    build:
+      context: ../src/frontend-web
+      dockerfile: Dockerfile
+    container_name: personalgrowth_frontend
+    ports:
+      # Frontend روی پورت 3000 در دسترس خواهد بود
+      - "3000:3000"
+    depends_on:
+      - api-gateway
+    environment:
+      # آدرس Gateway را به Frontend می‌دهیم تا بداند API کجاست
+      - NEXT_PUBLIC_API_URL=http://localhost:8000
+    restart: always
+    logging:
+      driver: "json-file"
+      options:
+        labels: "service=frontend-web"
+
+# بخش تعریف Volumeها (فضاهای ذخیره‌سازی دائمی)
+# داکر این Volumeها را مدیریت می‌کند و داده‌ها را در یک مکان امن روی سیستم میزبان ذخیره می‌کند.
+volumes:
+  postgres_data:
+  redis_data:
+  grafana_data:

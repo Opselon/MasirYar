@@ -1,0 +1,23 @@
+# docker/docker-compose.override.yml
+# این فایل برای تنظیمات توسعه (Development) استفاده می‌شود
+# Docker Compose به صورت خودکار این فایل را با docker-compose.yml ادغام می‌کند
+
+version: '3.8'
+
+services:
+  frontend-web:
+    # در محیط توسعه، سورس کد را مستقیماً map می‌کنیم تا Hot Reload کار کند
+    volumes:
+      - ../src/frontend-web:/app
+      # استفاده از anonymous volume برای node_modules تا node_modules هاست بازنویسی نشود
+      - /app/node_modules
+      - /app/.next
+    # تغییر دستور به npm run dev برای Hot Reload
+    command: npm run dev
+    # environment variables برای توسعه
+    environment:
+      - NODE_ENV=development
+      - NEXT_PUBLIC_API_URL=http://localhost:8000
+    # در محیط توسعه، restart را حفظ می‌کنیم اما Hot Reload فعال است
+    restart: always
+
