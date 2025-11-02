@@ -40,7 +40,7 @@ builder.Services.AddHangfire(config => config
     .SetDataCompatibilityLevel(CompatibilityLevel.Version_180)
     .UseSimpleAssemblyNameTypeSerializer()
     .UseRecommendedSerializerSettings()
-    .UsePostgreSqlStorage(connectionString, new PostgreSqlStorageOptions
+    .UsePostgreSqlStorage(opt => opt.UseNpgsqlConnection(connectionString), new PostgreSqlStorageOptions
     {
         SchemaName = "hangfire" // نام Schema برای جداول Hangfire
     }));
