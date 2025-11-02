@@ -1,0 +1,67 @@
+name: Create Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: '9.0.x'
+
+    - name: Restore dependencies
+      run: dotnet restore
+
+    - name: Build
+      run: dotnet build --configuration Release --no-restore
+
+    - name: Publish IdentityService
+      run: dotnet publish src/IdentityService/Api/Api.csproj --configuration Release --output ./publish/IdentityService
+
+    - name: Publish CoachingService
+      run: dotnet publish src/CoachingService/Api/Api.csproj --configuration Release --output ./publish/CoachingService
+
+    - name: Zip artifacts
+      run: |
+        zip -r IdentityService.zip ./publish/IdentityService
+        zip -r CoachingService.zip ./publish/CoachingService
+
+    - name: Create Release
+      id: create_release
+      uses: actions/create-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tag_name: ${{ github.ref }}
+        release_name: Release ${{ github.ref }}
+        draft: false
+        prerelease: false
+
+    - name: Upload IdentityService artifact
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: ./IdentityService.zip
+        asset_name: IdentityService.zip
+        asset_content_type: application/zip
+
+    - name: Upload CoachingService artifact
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: ./CoachingService.zip
+        asset_name: CoachingService.zip
+        asset_content_type: application/zip

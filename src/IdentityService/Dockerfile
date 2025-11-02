@@ -1,29 +1,15 @@
-# مسیر: src/IdentityService/Dockerfile
-FROM mcr.microsoft.com/dotnet/sdk:9.0 AS build
-WORKDIR /src
+# Use the official .NET SDK image as a build environment
+FROM mcr.microsoft.com/dotnet/sdk:9.0 AS build-env
 
-# کپی فایل‌های پروژه
-COPY ["Api/Api.csproj", "Api/"]
-COPY ["Application/Application.csproj", "Application/"]
-COPY ["Core/Core.csproj", "Core/"]
-COPY ["Infrastructure/Infrastructure.csproj", "Infrastructure/"]
+# Copy the project files and restore dependencies
+COPY src/IdentityService/ /app/src/IdentityService/
+RUN dotnet restore /app/src/IdentityService/Api/Api.csproj
 
-# Restore dependencies
-RUN dotnet restore "Api/Api.csproj"
+# Build the application
+RUN dotnet publish /app/src/IdentityService/Api/Api.csproj -c Release -o /app/out
 
-# کپی تمام فایل‌ها و Build
-COPY . .
-WORKDIR "/src/Api"
-RUN dotnet build "Api.csproj" -c Release -o /app/build
-
-# Publish
-FROM build AS publish
-RUN dotnet publish "Api.csproj" -c Release -o /app/publish
-
-# Runtime image
-FROM mcr.microsoft.com/dotnet/aspnet:9.0 AS final
+# Build the runtime image
+FROM mcr.microsoft.com/dotnet/aspnet:9.0
 WORKDIR /app
-COPY --from=publish /app/publish .
-EXPOSE 8080
+COPY --from=build-env /app/out .
 ENTRYPOINT ["dotnet", "Api.dll"]
-

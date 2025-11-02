@@ -24,9 +24,13 @@ function run_config_wizard() {
     read -p "Enter the database password [default: secret]: " db_password
     db_password=${db_password:-secret}
 
+    read -p "Enter the JWT secret key [default: YourSuperSecretKeyThatShouldBeAtLeast32CharactersLong!]: " jwt_secret_key
+    jwt_secret_key=${jwt_secret_key:-YourSuperSecretKeyThatShouldBeAtLeast32CharactersLong!}
+
     echo ""
     echo "Creating .env file..."
     echo "DATABASE_PASSWORD=${db_password}" > .env
+    echo "JWT_SECRET_KEY=${jwt_secret_key}" >> .env
     echo "--- .env file created ---"
     cat .env
     echo "-------------------------"
@@ -49,7 +53,8 @@ export $(grep -v '^#' .env | xargs)
 case "$1" in
     up)
         echo "Starting all services..."
-        docker-compose -f docker/docker-compose.yml up -d --build
+        docker-compose -f docker/docker-compose.yml up --build --exit-code-from migration-runner --remove-orphans
+        docker-compose -f docker/docker-compose.yml up -d
         ;;
     down)
         echo "Stopping all services..."

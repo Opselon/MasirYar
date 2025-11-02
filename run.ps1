@@ -24,9 +24,15 @@ function Run-ConfigWizard {
         $db_password = "secret"
     }
 
+    $jwt_secret_key = Read-Host -Prompt "Enter the JWT secret key [default: YourSuperSecretKeyThatShouldBeAtLeast32CharactersLong!]"
+    if ([string]::IsNullOrWhiteSpace($jwt_secret_key)) {
+        $jwt_secret_key = "YourSuperSecretKeyThatShouldBeAtLeast32CharactersLong!"
+    }
+
     Write-Host ""
     Write-Host "Creating .env file..."
     Set-Content -Path ".env" -Value "DATABASE_PASSWORD=$db_password"
+    Add-Content -Path ".env" -Value "JWT_SECRET_KEY=$jwt_secret_key"
     Write-Host "--- .env file created ---"
     Get-Content .env
     Write-Host "-------------------------"
