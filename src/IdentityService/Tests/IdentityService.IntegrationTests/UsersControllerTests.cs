@@ -3,6 +3,7 @@ using System.Net;
 using System.Net.Http.Json;
 using System.Threading.Tasks;
 using Api;
+using Api.DTOs;
 using DotNet.Testcontainers.Builders;
 using DotNet.Testcontainers.Containers;
 using Infrastructure.Persistence;
@@ -90,13 +91,6 @@ public class UsersControllerTests : IClassFixture<ApiFactory>
         Assert.NotNull(content);
         Assert.NotEqual(Guid.Empty, content.UserId);
     }
-}
-
-public class RegisterUserDto
-{
-    public string Username { get; set; }
-    public string Email { get; set; }
-    public string Password { get; set; }
 }
 
 public class RegisterUserResponse
