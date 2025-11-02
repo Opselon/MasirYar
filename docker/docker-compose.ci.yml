@@ -1,0 +1,33 @@
+version: '3.8'
+
+services:
+  identity-service:
+    build:
+      context: ../src/IdentityService
+      dockerfile: Dockerfile
+    container_name: personalgrowth_identity_service_ci
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+      - ASPNETCORE_URLS=http://+:8080
+    restart: on-failure
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/healthz"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+
+  coaching-service:
+    build:
+      context: ../src/CoachingService
+      dockerfile: Dockerfile
+    container_name: personalgrowth_coaching_service_ci
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+      - ASPNETCORE_URLS=http://+:8080
+      - IdentityService__Url=http://identity-service:8080
+    restart: on-failure
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/healthz"]
+      interval: 10s
+      timeout: 5s
+      retries: 3

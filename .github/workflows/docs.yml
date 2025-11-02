@@ -1,15 +1,10 @@
-name: Deploy Docs
+name: Deploy Docs to GitHub Pages
 
 on:
   push:
     branches:
-      - main
+      - master
     # Only run if files in the 'docs' directory have changed
-    paths:
-      - 'docs/**'
-  pull_request:
-    branches:
-      - main
     paths:
       - 'docs/**'
 
