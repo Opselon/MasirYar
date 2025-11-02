@@ -2,40 +2,40 @@
 sidebar_position: 1
 ---
 
-# Introduction
+# مقدمه
 
-Welcome to the Personal Growth Platform! This project is a microservices-based application designed to help users track and improve their personal development.
+به پلتفرم رشد شخصی خوش آمدید! این پروژه یک برنامه مبتنی بر میکروسرویس است که برای کمک به کاربران در ردیابی و بهبود توسعه شخصی خود طراحی شده است.
 
-## 🚀 Single-Command Setup
+## 🚀 راه‌اندازی با یک دستور (Single-Command Setup)
 
-This project uses a **smart setup script** (`run.sh` for Linux/macOS and `run.ps1` for Windows) to fully manage the ecosystem. This script automates the entire process, from checking prerequisites to configuration and execution.
+این پروژه از یک **اسکریپت راه‌انداز هوشمند** (`run.sh` برای Linux/macOS و `run.ps1` برای Windows) برای مدیریت کامل اکوسیستم استفاده می‌کند. این اسکریپت تمام فرآیندها، از بررسی پیش‌نیازها تا پیکربندی و اجرا را خودکار می‌کند.
 
 > [!IMPORTANT]
-> **Prerequisite:** The only required tool is [Docker Desktop](https://www.docker.com/products/docker-desktop/).
+> **پیش‌نیاز:** تنها ابزار مورد نیاز [Docker Desktop](https://www.docker.com/products/docker-desktop/) است.
 
-### Getting Started
+### شروع به کار
 
-1.  **Clone the repository:**
+1.  **کلون کردن مخزن:**
     ```shell
     git clone https://github.com/Opselon/MasirYar.git
     cd MasirYar
     ```
 
-2.  **Run the Setup Wizard:**
-    Run the script for the first time. An interactive Wizard will guide you through creating the `.env` configuration file.
+2.  **اجرای ویزارد راه‌اندازی:**
+    اسکریپت را برای اولین بار اجرا کنید. یک ویزارد تعاملی شما را برای ایجاد فایل پیکربندی `.env` راهنمایی خواهد کرد.
 
-    **On Linux/macOS:**
+    **در Linux/macOS:**
     ```bash
-    # Make the script executable (only once)
+    # اسکریپت را قابل اجرا کنید (فقط یک بار)
     chmod +x run.sh
-    # Start all services
+    # شروع همه سرویس‌ها
     ./run.sh up
     ```
 
-    **On Windows (with PowerShell):**
+    **در Windows (با PowerShell):**
     ```powershell
-    # If needed, allow script execution for this session
+    # در صورت نیاز، اجرای اسکریپت را برای این جلسه مجاز کنید
     # Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
-    # Start all services
+    # شروع همه سرویس‌ها
     .\run.ps1 up
     ```

@@ -2,25 +2,25 @@
 sidebar_position: 3
 ---
 
-# Application Layer
+# لایه Application
 
-This layer is the heart of the business logic for the `IdentityService` microservice. It is responsible for coordinating operations, executing business rules, and managing the flow of data between the `Api` layer and the `Infrastructure` layer.
+این لایه قلب منطق کسب‌وکار میکروسرویس `IdentityService` است. این لایه مسئولیت هماهنگی عملیات، اجرای قوانین کسب‌وکار و مدیریت جریان داده‌ها بین لایه `Api` و لایه `Infrastructure` را بر عهده دارد.
 
-## Responsibilities
+## مسئولیت‌ها
 
--   **Implementing Use Cases:** This layer includes the implementation of all system use cases, such as user registration, user login, etc.
--   **Executing Business Rules:** All business rules and logic are implemented in this layer to ensure data correctness and integrity.
--   **Coordinating Operations:** This layer acts as a coordinator and uses services from the `Infrastructure` layer to perform data-related operations and other external dependencies.
--   **No Dependency on Implementation Details:** This layer has no direct dependency on how technical details such as the database or external services are implemented and communicates with them through interfaces.
+-   **پیاده‌سازی Use Cases:** این لایه شامل پیاده‌سازی تمام موارد استفاده (Use Cases) سیستم است، مانند ثبت‌نام کاربر، ورود کاربر و غیره.
+-   **اجرای قوانین کسب‌وکار:** تمام قوانین و منطق کسب‌وکار در این لایه پیاده‌سازی می‌شوند تا از صحت و یکپارچگی داده‌ها اطمینان حاصل شود.
+-   **هماهنگی عملیات:** این لایه به عنوان یک هماهنگ‌کننده عمل می‌کند و از سرویس‌های لایه `Infrastructure` برای انجام عملیات مربوط به داده‌ها و دیگر وابستگی‌های خارجی استفاده می‌کند.
+-   **عدم وابستگی به جزئیات پیاده‌سازی:** این لایه هیچ وابستگی مستقیمی به نحوه پیاده‌سازی جزئیات فنی مانند پایگاه داده یا سرویس‌های خارجی ندارد و از طریق رابط‌ها (Interfaces) با آن‌ها در ارتباط است.
 
-## Structure
+## ساختار
 
--   `UseCases`: This folder contains all the system's use cases, grouped by features. Each feature includes its own `Command` or `Query` and the corresponding `Handler`.
-    -   **Commands:** For operations that change the state of the system (such as creating, updating, or deleting data).
-    -   **Queries:** For operations that read data from the system without changing its state.
-    -   **Handlers:** Contain the main logic for processing `Commands` and `Queries`.
--   `Interfaces`: This folder contains interfaces that are implemented by the `Infrastructure` layer, such as `IUserRepository` and `IPasswordHasher`. These interfaces allow the `Application` layer to communicate with other layers without being dependent on their implementation details.
+-   `UseCases`: این پوشه شامل تمام موارد استفاده سیستم است که بر اساس قابلیت‌ها (Features) گروه‌بندی شده‌اند. هر قابلیت شامل `Command` یا `Query` و `Handler` مربوط به خود است.
+    -   **Commands:** برای عملیاتی که وضعیت سیستم را تغییر می‌دهند (مانند ایجاد، به‌روزرسانی یا حذف داده‌ها).
+    -   **Queries:** برای عملیاتی که داده‌ها را از سیستم می‌خوانند بدون اینکه وضعیت آن را تغییر دهند.
+    -   **Handlers:** شامل منطق اصلی برای پردازش `Commands` و `Queries` است.
+-   `Interfaces`: این پوشه شامل رابط‌هایی است که توسط لایه `Infrastructure` پیاده‌سازی می‌شوند، مانند `IUserRepository` و `IPasswordHasher`. این رابط‌ها به لایه `Application` اجازه می‌دهند تا بدون وابستگی به جزئیات پیاده‌سازی، با لایه‌های دیگر در ارتباط باشد.
 
-## Design Pattern
+## الگوی طراحی
 
-This layer utilizes the **CQRS (Command Query Responsibility Segregation)** pattern with the help of the `MediatR` library. This pattern helps to separate read and write operations, resulting in cleaner, more maintainable, and scalable code.
+این لایه از الگوی **CQRS (Command Query Responsibility Segregation)** با استفاده از کتابخانه `MediatR` بهره می‌برد. این الگو به جداسازی عملیات خواندن و نوشتن کمک می‌کند و باعث می‌شود که کد تمیزتر، قابل نگهداری‌تر و مقیاس‌پذیرتر باشد.

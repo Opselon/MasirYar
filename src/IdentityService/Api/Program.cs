@@ -118,6 +118,8 @@ app.MapGrpcService<IdentityGrpcService>();
 
 app.MapControllers();
 
+app.MapGet("/healthz", () => "OK");
+
 app.Run();
 
 public partial class Program { }

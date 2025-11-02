@@ -2,22 +2,22 @@
 sidebar_position: 2
 ---
 
-# Api Layer
+# لایه Api
 
-This layer is the main entry point for the `IdentityService` microservice and is responsible for managing incoming requests, validating them, and sending appropriate responses.
+این لایه نقطه ورود اصلی برای میکروسرویس `IdentityService` است و مسئولیت مدیریت درخواست‌های ورودی، اعتبارسنجی آن‌ها و ارسال پاسخ‌های مناسب را بر عهده دارد.
 
-## Responsibilities
+## مسئولیت‌ها
 
--   **Providing Endpoints:** This layer includes RESTful API controllers and gRPC services that make various operations such as user registration, login, and management available to clients.
--   **Authentication and Authorization:** This layer is responsible for implementing authentication and authorization policies to ensure that only authorized users have access to resources.
--   **Input Validation:** Input data from clients is validated in this layer to ensure its correctness and completeness.
--   **Serialization and Deserialization:** This layer is responsible for converting data from JSON format (for REST) or Protocol Buffers (for gRPC) to C# objects and vice versa.
+-   **ارائه Endpoints:** این لایه شامل کنترلرهای RESTful API و سرویس‌های gRPC است که عملیات مختلفی مانند ثبت‌نام، ورود و مدیریت کاربران را در دسترس کلاینت‌ها قرار می‌دهند.
+-   **احراز هویت و مجوزدهی:** این لایه مسئولیت اجرای سیاست‌های احراز هویت (Authentication) و مجوزدهی (Authorization) را بر عهده دارد تا اطمینان حاصل شود که فقط کاربران مجاز به منابع دسترسی دارند.
+-   **اعتبارسنجی ورودی:** داده‌های ورودی از کلاینت‌ها در این لایه اعتبارسنجی می‌شوند تا از صحت و کامل بودن آن‌ها اطمینان حاصل شود.
+-   **Serialization و Deserialization:** این لایه مسئولیت تبدیل داده‌ها از فرمت JSON (برای REST) یا Protocol Buffers (برای gRPC) به اشیاء C# و برعکس را بر عهده دارد.
 
-## Structure
+## ساختار
 
--   `Controllers`: Contains RESTful API controllers, each dedicated to a specific resource (e.g., `Users`).
--   `Services`: Contains the implementation of gRPC services.
--   `DTOs`: Contains Data Transfer Objects used for data exchange between the client and server.
--   `Extensions`: Contains helper methods for configuring services in `Program.cs`.
--   `Filters`: Contains custom filters for error handling and other cross-cutting concerns.
--   `Program.cs`: The starting point of the application, containing the main service configurations, such as Dependency Injection, Authentication, and the Middleware Pipeline.
+-   `Controllers`: شامل کنترلرهای RESTful API است که هر کدام به یک منبع خاص (مانند `Users`) اختصاص داده شده‌اند.
+-   `Services`: شامل پیاده‌سازی سرویس‌های gRPC است.
+-   `DTOs`: شامل اشیاء انتقال داده (Data Transfer Objects) است که برای تبادل داده بین کلاینت و سرور استفاده می‌شوند.
+-   `Extensions`: شامل متدهای کمکی برای پیکربندی سرویس‌ها در `Program.cs` است.
+-   `Filters`: شامل فیلترهای سفارشی برای خطایابی و دیگر عملیات Cross-Cutting Concerns است.
+-   `Program.cs`: نقطه شروع برنامه است و شامل پیکربندی‌های اصلی سرویس، مانند Dependency Injection، Authentication و Middleware Pipeline است.
