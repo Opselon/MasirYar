@@ -5,8 +5,8 @@ version: '3.8'
 services:
   # ------ زیرساخت ------
   postgres-db:
-    # از آخرین ایمیج رسمی PostgreSQL نسخه 16 استفاده می‌کنیم.
-    image: postgres:16
+    build:
+      context: ./postgres
     # نام کانتینر را برای دسترسی راحت‌تر، postgres-db قرار می‌دهیم.
     container_name: personalgrowth_postgres
     # تنظیمات محیطی برای راه‌اندازی اولیه PostgreSQL
@@ -24,25 +24,12 @@ services:
       - postgres_data:/var/lib/postgresql/data
     # خط مشی ریستارت: همیشه کانتینر را در صورت توقف ناخواسته، مجدداً راه‌اندازی کن.
     restart: always
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U admin -d PersonalGrowthDb"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
-  # ------ سرویس کش Redis ------
-  redis-cache:
-    # از آخرین ایمیج رسمی Redis استفاده می‌کنیم.
-    image: redis:latest
-    # نام کانتینر را redis-cache قرار می‌دهیم.
-    container_name: personalgrowth_redis
-    # نگاشت پورت: پورت 6379 داخل کانتینر را به پورت 6379 روی سیستم میزبان متصل می‌کنیم.
-    ports:
-      - "6379:6379"
-    # تعریف یک Volume برای نگهداری داده‌های Redis (در صورت نیاز به پایداری)
-    volumes:
-      - redis_data:/data
-    # خط مشی ریستارت: همیشه کانتینر را ریستارت کن.
-    restart: always
-    logging:
-      driver: "json-file"
-      options:
-        labels: "service=redis"
 
   # ------ Observability (مشاهده‌پذیری) ------
   loki:
@@ -79,19 +66,34 @@ services:
         labels: "service=grafana"
 
   # ------ میکروسرویس‌ها ------
+  migration-runner:
+    build:
+      context: ../
+      dockerfile: src/IdentityService/Dockerfile
+    depends_on:
+      postgres-db:
+        condition: service_healthy
+    environment:
+      - ConnectionStrings__DefaultConnection=Host=postgres-db;Port=5432;Database=PersonalGrowthDb;Username=admin;Password=secret
+    command: >
+      /bin/bash -c "
+        dotnet tool install --global dotnet-ef &&
+        dotnet ef database update --project src/IdentityService/Infrastructure --startup-project src/IdentityService/Api
+      "
+
   identity-service:
     build:
-      context: ../src/IdentityService
-      dockerfile: Dockerfile
+      context: ../
+      dockerfile: src/IdentityService/Dockerfile
     container_name: personalgrowth_identity_service
     # دیگر نیازی به نگاشت پورت به بیرون نیست، چون Gateway با آن صحبت می‌کند
     depends_on:
-      - postgres-db
+      - migration-runner
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_URLS=http://+:8080
       - ConnectionStrings__DefaultConnection=Host=postgres-db;Port=5432;Database=PersonalGrowthDb;Username=admin;Password=secret
-      - Jwt__SecretKey=YourSuperSecretKeyThatShouldBeAtLeast32CharactersLong!
+      - Jwt__SecretKey=${JWT_SECRET_KEY}
       - Jwt__Issuer=IdentityService
       - Jwt__Audience=IdentityService
       - Jwt__ExpirationMinutes=60

@@ -30,6 +30,9 @@ public class IdentityDbContext : DbContext
         modelBuilder.Entity<Journal>()
             .HasIndex(j => j.UserId);
 
+        modelBuilder.Entity<Journal>()
+            .HasIndex(j => j.CreatedAt);
+
         // تعریف رابطه بین Journal و User (اختیاری)
         modelBuilder.Entity<Journal>()
             .HasOne<User>()
