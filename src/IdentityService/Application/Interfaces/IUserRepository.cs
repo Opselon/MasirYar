@@ -37,8 +37,13 @@ public interface IUserRepository
     Task AddAsync(User user, CancellationToken cancellationToken = default);
 
     /// <summary>
+    /// افزودن یک پیام Outbox جدید
+    /// </summary>
+    Task AddOutboxMessageAsync(OutboxMessage message, CancellationToken cancellationToken = default);
+
+    /// <summary>
     /// ذخیره تغییرات در دیتابیس
     /// </summary>
-    Task SaveChangesAsync(CancellationToken cancellationToken = default);
+    Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
 }
 

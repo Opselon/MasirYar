@@ -3,6 +3,7 @@
 using Application.Interfaces;
 using Core.Entities;
 using MediatR;
+using System.Text.Json;
 
 namespace Application.UseCases.UserRegistration;
 
@@ -55,8 +56,24 @@ public class RegisterUserCommandHandler : IRequestHandler<RegisterUserCommand, G
             UpdatedAt = DateTime.UtcNow
         };
 
-        // افزودن کاربر به دیتابیس
+        // ایجاد رویداد برای Outbox
+        var userRegisteredEvent = new
+        {
+            UserId = newUser.Id,
+            Username = newUser.Username,
+            Email = newUser.Email
+        };
+
+        var outboxMessage = new OutboxMessage(
+            type: "UserRegisteredEvent",
+            content: JsonSerializer.Serialize(userRegisteredEvent)
+        );
+
+        // افزودن کاربر و پیام Outbox به Repository
         await _userRepository.AddAsync(newUser, cancellationToken);
+        await _userRepository.AddOutboxMessageAsync(outboxMessage, cancellationToken);
+
+        // ذخیره هر دو تغییر در یک تراکنش
         await _userRepository.SaveChangesAsync(cancellationToken);
 
         // برگرداندن شناسه کاربر جدید

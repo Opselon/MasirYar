@@ -30,6 +30,24 @@ services:
       timeout: 5s
       retries: 5
 
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: personalgrowth_rabbitmq
+    ports:
+      # پورت اصلی برای ارتباط با RabbitMQ
+      - "5672:5672"
+      # داشبورد مدیریتی
+      - "15672:15672"
+    environment:
+      - RABBITMQ_DEFAULT_USER=guest
+      - RABBITMQ_DEFAULT_PASS=guest
+    restart: always
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
 
   # ------ Observability (مشاهده‌پذیری) ------
   loki:
@@ -121,6 +139,26 @@ services:
       driver: "json-file"
       options:
         labels: "service=coaching-service"
+
+  notification-service:
+    build:
+      context: ../
+      dockerfile: src/NotificationService/Api/Dockerfile
+    container_name: personalgrowth_notification_service
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+      identity-service:
+        condition: service_started
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:8080
+      - RabbitMq__HostName=rabbitmq
+    restart: always
+    logging:
+      driver: "json-file"
+      options:
+        labels: "service=notification-service"
 
   # ------ نقطه ورود و کلاینت ------
   api-gateway:

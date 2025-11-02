@@ -53,9 +53,14 @@ public class UserRepository : IUserRepository
         await _dbContext.Users.AddAsync(user, cancellationToken);
     }
 
-    public async Task SaveChangesAsync(CancellationToken cancellationToken = default)
+    public async Task AddOutboxMessageAsync(OutboxMessage message, CancellationToken cancellationToken = default)
     {
-        await _dbContext.SaveChangesAsync(cancellationToken);
+        await _dbContext.OutboxMessages.AddAsync(message, cancellationToken);
+    }
+
+    public async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
+    {
+        return await _dbContext.SaveChangesAsync(cancellationToken);
     }
 }
 

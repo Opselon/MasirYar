@@ -31,6 +31,7 @@ builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IJournalRepository, JournalRepository>();
 builder.Services.AddScoped<IJournalAnalyzer, JournalAnalyzer>();
 builder.Services.AddSingleton<IJwtTokenGenerator, JwtTokenGenerator>();
+builder.Services.AddScoped<IOutboxPublisherService, OutboxPublisherService>();
 
 // ۴. پیکربندی MediatR برای استفاده از Handlers در لایه Application
 builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(Assembly.Load("Application")));
@@ -119,6 +120,12 @@ app.MapGrpcService<IdentityGrpcService>();
 app.MapControllers();
 
 app.MapGet("/healthz", () => "OK");
+
+// تعریف کار پس‌زمینه برای ارسال پیام‌های Outbox
+RecurringJob.AddOrUpdate<IOutboxPublisherService>(
+    "publish-outbox-messages",
+    service => service.PublishPendingMessagesAsync(CancellationToken.None),
+    Cron.Minutely()); // هر دقیقه یک بار اجرا شود
 
 app.Run();
 
