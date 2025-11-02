@@ -2,33 +2,33 @@
 sidebar_position: 1
 ---
 
-# Testing Strategy
+# استراتژی تست
 
-This microservice has a complete set of automated tests to ensure the quality and stability of the code.
+این میکروسرویس دارای یک مجموعه کامل از تست‌های خودکار برای اطمینان از کیفیت و پایداری کد است.
 
-## Test Types
+## انواع تست
 
-### 1. Unit Tests
-- **Location:** `IdentityService.UnitTests`
-- **Goal:** To test the pure and isolated business logic in the `Core` and `Application` layers (such as Command Handlers and domain entities).
-- **Dependencies:** These tests have **no external dependencies**. The EF Core In-Memory Database is used to simulate the database.
-- **Speed:** Very fast.
-- **Execution:** `dotnet test`
+### ۱. تست‌های واحد (Unit Tests)
+- **مکان:** `IdentityService.UnitTests`
+- **هدف:** تست منطق کسب‌وکار خالص و مجزا در لایه‌های `Core` و `Application` (مانند Command Handlerها و موجودیت‌های دامنه).
+- **وابستگی‌ها:** این تست‌ها **هیچ وابستگی خارجی** ندارند. از EF Core In-Memory Database برای شبیه‌سازی پایگاه داده استفاده می‌شود.
+- **سرعت:** بسیار سریع.
+- **اجرا:** `dotnet test`
 
-### 2. Integration Tests
-- **Location:** `IdentityService.IntegrationTests`
-- **Goal:** To test the complete flow of a request from the API entry point (`Controller`) to the database, within a single microservice.
-- **Dependencies:** These tests use **Testcontainers** to launch a **real** PostgreSQL database in a temporary and isolated Docker container for each test suite.
-- **Speed:** Slower than unit tests, but very reliable.
-- **Execution:** `dotnet test`
-- **Note:** To run these tests, Docker must be installed and running on your system.
+### ۲. تست‌های یکپارچه‌سازی (Integration Tests)
+- **مکان:** `IdentityService.IntegrationTests`
+- **هدف:** تست جریان کامل یک درخواست از نقطه ورود API (`Controller`) تا پایگاه داده، در داخل یک میکروسرویس واحد.
+- **وابستگی‌ها:** این تست‌ها از **Testcontainers** برای راه‌اندازی یک پایگاه داده **واقعی** PostgreSQL در یک کانتینر داکر موقت و ایزوله برای هر مجموعه تست استفاده می‌کنند.
+- **سرعت:** کندتر از تست‌های واحد، اما بسیار قابل اعتماد.
+- **اجرا:** `dotnet test`
+- **نکته:** برای اجرای این تست‌ها، باید Docker بر روی سیستم شما نصب و در حال اجرا باشد.
 
-## How to Run All Tests
+## نحوه اجرای تمام تست‌ها
 
-To run all the tests for this microservice, go to the root of the `IdentityService` folder and run the following command:
+برای اجرای تمام تست‌های این میکروسرویس، به ریشه پوشه `IdentityService` بروید و دستور زیر را اجرا کنید:
 
 ```shell
 dotnet test
 ```
 
-This command will automatically find and run all the test projects in the solution.
+این دستور به صورت خودکار تمام پروژه‌های تست در Solution را پیدا و اجرا می‌کند.

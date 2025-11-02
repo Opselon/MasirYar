@@ -4,17 +4,17 @@ sidebar_position: 1
 
 # IdentityService
 
-This microservice is responsible for all operations related to users, authentication, and access management.
+این میکروسرویس مسئول تمام عملیات مربوط به کاربران، احراز هویت و مدیریت دسترسی است.
 
-## Project Structure
+## ساختار پروژه
 
-This project follows the Clean Architecture and is divided into the following layers:
+این پروژه از معماری پاک (Clean Architecture) پیروی می‌کند و به لایه‌های زیر تقسیم شده است:
 
-- **Core**: Contains the domain entities, which have no dependency on any specific framework.
-- **Application**: Contains the business logic and Use Cases.
-- **Infrastructure**: Contains technical implementations such as database access, external services, etc.
-- **Api**: The presentation layer that includes controllers and web configurations.
+- **Core**: شامل موجودیت‌های دامنه (Domain Entities) است که هیچ وابستگی به فریم‌ورک خاصی ندارند.
+- **Application**: شامل منطق کسب‌وکار و موارد استفاده (Use Cases) است.
+- **Infrastructure**: شامل پیاده‌سازی‌های فنی مانند دسترسی به پایگاه داده، سرویس‌های خارجی و غیره است.
+- **Api**: لایه ارائه که شامل کنترلرها و تنظیمات وب است.
 
-## Domain Model
+## مدل دامنه
 
-The main model of this service is the `User` entity, which is defined in the `Core` layer and includes basic user information such as ID, username, email, and password hash.
+مدل اصلی این سرویس، موجودیت `User` است که در لایه `Core` تعریف شده و شامل اطلاعات اولیه کاربر مانند شناسه، نام کاربری، ایمیل و هش رمز عبور است.

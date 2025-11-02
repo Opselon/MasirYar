@@ -2,26 +2,26 @@
 sidebar_position: 2
 ---
 
-# High-Level Architecture
+# معماری سطح بالا
 
-The platform is built using a microservices architecture, with each service responsible for a specific domain. The services communicate with each other using a combination of synchronous (gRPC) and asynchronous (RabbitMQ) communication.
+این پلتفرم با استفاده از معماری میکروسرویس ساخته شده است، که در آن هر سرویس مسئول یک دامنه خاص است. سرویس‌ها با استفاده از ترکیبی از ارتباطات همزمان (gRPC) و ناهمزمان (RabbitMQ) با یکدیگر ارتباط برقرار می‌کنند.
 
-## Microservices
+## میکروسرویس‌ها
 
-*   **IdentityService:** Manages user authentication, registration, and user profiles.
-*   **CoachingService:** Handles the core coaching and journaling features of the platform.
+*   **IdentityService:** مدیریت احراز هویت کاربر، ثبت‌نام و پروفایل‌های کاربری.
+*   **CoachingService:** مدیریت ویژگی‌های اصلی مربیگری و ژورنالینگ پلتفرم.
 
-## Project Structure
+## ساختار پروژه
 
-The project is organized into the following directories:
+پروژه به صورت زیر در دایرکتوری‌ها سازماندهی شده است:
 
-*   `src`: Contains the source code for the microservices.
-*   `docker`: Contains the `docker-compose.yml` file and other Docker-related files.
-*   `protos`: Contains the Protocol Buffer definitions for gRPC communication.
+*   `src`: شامل کد منبع میکروسرویس‌ها.
+*   `docker`: شامل فایل `docker-compose.yml` و سایر فایل‌های مرتبط با Docker.
+*   `protos`: شامل تعاریف Protocol Buffer برای ارتباط gRPC.
 
-Each microservice in the `src` directory follows a clean architecture pattern, with the following layers:
+هر میکروسرویس در دایرکتوری `src` از الگوی معماری پاک (clean architecture) پیروی می‌کند و دارای لایه‌های زیر است:
 
-*   `Api`: The entry point for the service, containing the API controllers and gRPC services.
-*   `Application`: Contains the business logic and use cases for the service.
-*   `Core`: Contains the domain entities and interfaces.
-*   `Infrastructure`: Contains the implementation of the interfaces defined in the `Core` layer, such as repositories and external service clients.
+*   `Api`: نقطه ورود سرویس، شامل کنترلرهای API و سرویس‌های gRPC.
+*   `Application`: شامل منطق کسب‌وکار و موارد استفاده (use cases) سرویس.
+*   `Core`: شامل موجودیت‌های دامنه (domain entities) و رابط‌ها (interfaces).
+*   `Infrastructure`: شامل پیاده‌سازی رابط‌های تعریف شده در لایه `Core`، مانند ریپازیتوری‌ها و کلاینت‌های سرویس‌های خارجی.
