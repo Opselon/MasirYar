@@ -1,56 +1,148 @@
-# Personal Growth Platform - Microservices
+<div align="center">
+  <img src="https://raw.githubusercontent.com/user-attachments/assets/dd38f870-136b-4e1d-8557-d318e3e4a3b8/logo.png" alt="Project Logo" width="150"/>
+  <h1>پلتفرم رشد شخصی و فراآگاهی</h1>
+  <p>
+    <strong>یک پروژه متن‌باز برای ساخت یک پلتفرم هوشمند رشد فردی با معماری میکروسرویس، به همراه یک مسیر آموزشی کامل.</strong>
+  </p>
+  <p>
+    <a href="#-چشم‌انداز-پروژه">چشم‌انداز</a> •
+    <a href="#-معماری-و-پشته-فناوری">پشته فناوری</a> •
+    <a href="#-راهنمای-راه‌اندازی-سریع">راه‌اندازی سریع</a> •
+    <a href="#-ساختار-پروژه">ساختار پروژه</a> •
+    <a href="#-استراتژی-تست">استراتژی تست</a> •
+    <a href="#-مشارکت-در-پروژه">مشارکت</a>
+  </p>
 
-This repository contains the source code for the Personal Growth Platform, a microservices-based application designed to help users track and improve their personal development.
+  [![Build Status](https://img.shields.io/badge/build-passing-brightgreen.svg)](https://github.com/YOUR_USERNAME/YOUR_REPO/actions)
+  [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+  [![.NET Version](https://img.shields.io/badge/.NET-9.0-blueviolet.svg)](https://dotnet.microsoft.com/download/dotnet/9.0)
+  [![Docker](https://img.shields.io/badge/Docker-Powered-blue.svg)](https://www.docker.com/)
 
-## Architecture Overview
+</div>
 
-The platform is built using a microservices architecture, with each service responsible for a specific domain. The services communicate with each other using a combination of synchronous (gRPC) and asynchronous (RabbitMQ) communication.
+---
 
-### Microservices
+## 🎯 چشم‌انداز پروژه
 
-*   **IdentityService:** Manages user authentication, registration, and user profiles.
-*   **CoachingService:** Handles the core coaching and journaling features of the platform.
+این پروژه دو هدف اصلی را دنبال می‌کند:
 
-## Getting Started
+1.  **محصول نهایی:** ساخت یک پلتفرم هوشمند و جامع برای **رشد شخصی و فراآگاهی**. کاربران می‌توانند مسیرهای خودشناسی را طی کنند، ژورنال‌های روزانه بنویسند، تحلیل‌های هوشمند دریافت کنند و پیشرفت خود را پیگیری نمایند.
 
-To get the project up and running, you will need to have the following installed:
+2.  **پروژه آموزشی:** ارائه یک **نقشه راه عملی و کامل** برای یادگیری مفاهیم پیشرفته مهندسی نرم‌افزار، از جمله:
+    -   معماری میکروسرویس (Microservices)
+    -   اصول طراحی دامنه محور (Domain-Driven Design - DDD)
+    -   اصول SOLID
+    -   کانتینرسازی با Docker و Docker Compose
+    -   ارتباطات سرویس-به-سرویس (REST & gRPC)
+    -   مدیریت متمرکز لاگ‌ها (Loki & Grafana)
+    -   استراتژی‌های تست جامع (Unit, Integration, E2E)
+    -   و پیاده‌سازی CI/CD.
 
-*   [.NET 9.0 SDK](https://dotnet.microsoft.com/download/dotnet/9.0)
-*   [Docker](https://www.docker.com/products/docker-desktop)
-*   [Docker Compose](https://docs.docker.com/compose/install/)
+> [!NOTE]
+> **نکته مهم:** تمام کدها، کامنت‌ها و مستندات به زبان **فارسی** نوشته شده‌اند تا به عنوان یک منبع آموزشی غنی برای جامعه توسعه‌دهندگان فارسی‌زبان عمل کنند.
 
-### Running the Project
+---
 
-1.  **Clone the repository:**
+## 🛠️ معماری و پشته فناوری
 
+پلتفرم بر اساس معماری **میکروسرویس** طراحی شده است. هر سرویس، یک دامنه کسب‌وکار مشخص را مدیریت می‌کند و می‌تواند به صورت مستقل توسعه، تست و مستقر شود.
+
+| لایه                 | فناوری / ابزار                                       | توضیحات                                                                 |
+| -------------------- | ----------------------------------------------------- | ----------------------------------------------------------------------- |
+| **Backend**          | `C#`, `.NET 9`, `ASP.NET Core`                          | فریم‌ورک اصلی برای ساخت سرویس‌های قوی و مقیاس‌پذیر.                     |
+| **Frontend**         | `TypeScript`, `Next.js`, `React`, `Tailwind CSS`        | برای ساخت یک رابط کاربری مدرن، سریع و واکنش‌گرا.                        |
+| **پایگاه داده**      | `PostgreSQL 16`                                       | یک پایگاه داده رابطه‌ای قدرتمند و قابل اعتماد.                            |
+| **کش**               | `Redis`                                               | برای کش کردن داده‌ها و افزایش سرعت پاسخ‌دهی.                              |
+| **کانتینرسازی**       | `Docker`, `Docker Compose`                            | برای ایجاد محیط‌های توسعه و تولید یکسان و قابل حمل.                      |
+| **API Gateway**      | `YARP (Yet Another Reverse Proxy)`                    | به عنوان تنها نقطه ورود به سیستم، مدیریت مسیردهی و امنیت.                |
+| **کارهای پس‌زمینه**  | `Hangfire`                                            | برای اجرای پردازش‌های زمان‌بر (مانند تحلیل AI) بدون مسدود کردن کاربر.      |
+| **لاگ و مانیتورینگ** | `Loki`, `Grafana`                                     | برای جمع‌آوری، جستجو و بصری‌سازی متمرکز لاگ‌های تمام سرویس‌ها.           |
+| **تست**              | `xUnit`, `Testcontainers`, `Moq`                        | برای تضمین کیفیت و پایداری کد در لایه‌های مختلف.                         |
+
+---
+
+## 🚀 راهنمای راه‌اندازی سریع
+
+برای راه‌اندازی کامل پلتفرم در محیط محلی، تنها ابزار مورد نیاز **Docker Desktop** است.
+
+> [!IMPORTANT]
+> تمام نیازمندی‌ها (SDK دات‌نت، Node.js، PostgreSQL و...) در کانتینرهای داکر مدیریت می‌شوند و **نیازی به نصب آن‌ها روی سیستم عامل شما نیست.**
+
+**مراحل راه‌اندازی:**
+
+1.  **دریافت پروژه:**
     ```shell
-    git clone https://github.com/your-username/personal-growth-platform.git
-    cd personal-growth-platform
+    git clone https://github.com/YOUR_USERNAME/YOUR_REPO.git
+    cd YOUR_REPO
     ```
 
-2.  **Run the project using Docker Compose:**
-
+2.  **اجرای اکوسیستم:**
+    به پوشه `docker` بروید و دستور جادویی را اجرا کنید:
     ```shell
-    docker-compose up -d --build
+    cd docker
+    docker-compose up --build -d
     ```
+    -   `--build`: ایمیج‌های داکر را برای اولین بار می‌سازد.
+    -   `-d`: سرویس‌ها را در پس‌زمینه (detached mode) اجرا می‌کند.
 
-    This will build and run all the services, databases, and other infrastructure components in Docker containers.
+3.  **پلتفرم شما آماده است!**
+    -   **Frontend (رابط کاربری):** [http://localhost:3000](http://localhost:3000)
+    -   **API Gateway (نقطه ورود API):** [http://localhost:8000](http://localhost:8000)
+    -   **داشبورد Grafana (لاگ‌ها):** [http://localhost:3001](http://localhost:3001) (user: `admin`, pass: `admin`)
+    -   **داشبورد Hangfire (کارهای پس‌زمینه):** [http://localhost:5001/hangfire](http://localhost:5001/hangfire)
 
-## Project Structure
+> [!TIP]
+> برای متوقف کردن تمام سرویس‌ها، در پوشه `docker` دستور `docker-compose down` را اجرا کنید. برای حذف کامل داده‌ها، از `docker-compose down -v` استفاده کنید.
 
-The project is organized into the following directories:
+---
 
-*   `src`: Contains the source code for the microservices.
-*   `docker`: Contains the `docker-compose.yml` file and other Docker-related files.
-*   `protos`: Contains the Protocol Buffer definitions for gRPC communication.
+## 📂 ساختار پروژه
 
-Each microservice in the `src` directory follows a clean architecture pattern, with the following layers:
+پروژه به صورت ماژولار و بر اساس دامنه کسب‌وکار سازماندهی شده است.
 
-*   `Api`: The entry point for the service, containing the API controllers and gRPC services.
-*   `Application`: Contains the business logic and use cases for the service.
-*   `Core`: Contains the domain entities and interfaces.
-*   `Infrastructure`: Contains the implementation of the interfaces defined in the `Core` layer, such as repositories and external service clients.
+```
+/
+├── .github/          # تنظیمات CI/CD با GitHub Actions
+├── docker/           # فایل‌های Docker Compose و پیکربندی زیرساخت
+├── protos/           # فایل‌های .proto برای ارتباطات gRPC
+├── src/              # سورس کد تمام میکروسرویس‌ها و برنامه‌ها
+│   ├── ApiGateway/
+│   ├── CoachingService/
+│   ├── IdentityService/
+│   │   ├── Api/
+│   │   ├── Application/
+│   │   ├── Core/
+│   │   ├── Infrastructure/
+│   │   └── Tests/
+│   └── frontend-web/
+└── README.md         # شما اینجا هستید :)
+```
 
-## Contributing
+---
 
-Contributions are welcome! Please feel free to open an issue or submit a pull request.
+## ✅ استراتژی تست
+
+کیفیت کد از طریق یک استراتژی تست چندلایه تضمین می‌شود. هدف اصلی، اجرای تست‌ها به صورت **سریع، خودکار و مستقل از وابستگی‌های خارجی** است. برای جزئیات کامل، به `README.md` داخل پوشه `Tests` هر میکروسرویس مراجعه کنید.
+
+-   **تست‌های واحد (Unit Tests):** منطق خالص کسب‌وکار را با دیتابیس در حافظه تست می‌کنند.
+-   **تست‌های یکپارچه‌سازی (Integration Tests):** جریان کامل یک میکروسرویس را با یک دیتابیس واقعی (که در یک کانتینر داکر موقت با `Testcontainers` اجرا می‌شود) تست می‌کنند.
+
+برای اجرای تمام تست‌ها، دستور زیر را در ریشه پروژه اجرا کنید:
+```shell
+dotnet test
+```
+
+---
+
+## 🤝 مشارکت در پروژه (Contributing)
+
+ما از هرگونه مشارکت در این پروژه استقبال می‌کنیم! چه در قالب ارائه ایده‌های جدید، گزارش باگ، بهبود مستندات یا ارسال Pull Request.
+
+> [!WARNING]
+> این پروژه در حال توسعه فعال است. ممکن است تغییرات بزرگی در ساختار آن رخ دهد.
+
+---
+
+<div align="center">
+  ساخته شده با ❤️ و کد برای رشد و آگاهی.
+</div>
