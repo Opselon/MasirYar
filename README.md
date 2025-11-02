@@ -2,55 +2,52 @@
 
 This repository contains the source code for the Personal Growth Platform, a microservices-based application designed to help users track and improve their personal development.
 
-## Architecture Overview
+## 🚀 Single-Command Setup
 
-The platform is built using a microservices architecture, with each service responsible for a specific domain. The services communicate with each other using a combination of synchronous (gRPC) and asynchronous (RabbitMQ) communication.
+This project uses a **smart setup script** (`run.sh` for Linux/macOS and `run.ps1` for Windows) to fully manage the ecosystem. This script automates the entire process, from checking prerequisites to configuration and execution.
 
-### Microservices
+> [!IMPORTANT]
+> **Prerequisite:** The only required tool is [Docker Desktop](https://www.docker.com/products/docker-desktop/).
 
-*   **IdentityService:** Manages user authentication, registration, and user profiles.
-*   **CoachingService:** Handles the core coaching and journaling features of the platform.
-
-## Getting Started
-
-To get the project up and running, you will need to have the following installed:
-
-*   [.NET 9.0 SDK](https://dotnet.microsoft.com/download/dotnet/9.0)
-*   [Docker](https://www.docker.com/products/docker-desktop)
-*   [Docker Compose](https://docs.docker.com/compose/install/)
-
-### Running the Project
+### Getting Started
 
 1.  **Clone the repository:**
-
     ```shell
-    git clone https://github.com/your-username/personal-growth-platform.git
-    cd personal-growth-platform
+    git clone https://github.com/Opselon/MasirYar.git
+    cd MasirYar
     ```
 
-2.  **Run the project using Docker Compose:**
+2.  **Run the Setup Wizard:**
+    Run the script for the first time. An interactive Wizard will guide you through creating the `.env` configuration file.
 
-    ```shell
-    docker-compose up -d --build
+    **On Linux/macOS:**
+    ```bash
+    # Make the script executable (only once)
+    chmod +x run.sh
+    # Start all services
+    ./run.sh up
     ```
 
-    This will build and run all the services, databases, and other infrastructure components in Docker containers.
+    **On Windows (with PowerShell):**
+    ```powershell
+    # If needed, allow script execution for this session
+    # Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
+    # Start all services
+    .\run.ps1 up
+    ```
 
-## Project Structure
+### Managing the Ecosystem
 
-The project is organized into the following directories:
+Use the setup script for all your daily tasks:
 
-*   `src`: Contains the source code for the microservices.
-*   `docker`: Contains the `docker-compose.yml` file and other Docker-related files.
-*   `protos`: Contains the Protocol Buffer definitions for gRPC communication.
+| Command                        | Description                                                        |
+| ---------------------------- | --------------------------------------------------------------- |
+| `up`                         | Start all services.                                       |
+| `down`                       | Stop all services.                                      |
+| `logs [service-name]`        | View live logs (example: `./run.sh logs identity-service`).     |
+| `prune`                      | **(Dangerous)** Stop and completely remove everything, including data.         |
+| `config`                     | Re-run the configuration Wizard.                                     |
+| `test`                       | Run all automated tests for the project.                               |
 
-Each microservice in the `src` directory follows a clean architecture pattern, with the following layers:
-
-*   `Api`: The entry point for the service, containing the API controllers and gRPC services.
-*   `Application`: Contains the business logic and use cases for the service.
-*   `Core`: Contains the domain entities and interfaces.
-*   `Infrastructure`: Contains the implementation of the interfaces defined in the `Core` layer, such as repositories and external service clients.
-
-## Contributing
-
-Contributions are welcome! Please feel free to open an issue or submit a pull request.
+> [!TIP]
+> To see the full list of commands, run the script without any parameters (`./run.sh` or `.\run.ps1`).

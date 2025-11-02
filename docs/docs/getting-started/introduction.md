@@ -6,27 +6,36 @@ sidebar_position: 1
 
 Welcome to the Personal Growth Platform! This project is a microservices-based application designed to help users track and improve their personal development.
 
-## Getting Started
+## 🚀 Single-Command Setup
 
-To get the project up and running, you will need to have the following installed:
+This project uses a **smart setup script** (`run.sh` for Linux/macOS and `run.ps1` for Windows) to fully manage the ecosystem. This script automates the entire process, from checking prerequisites to configuration and execution.
 
-*   [.NET 9.0 SDK](https://dotnet.microsoft.com/download/dotnet/9.0)
-*   [Docker](https://www.docker.com/products/docker-desktop)
-*   [Docker Compose](https://docs.docker.com/compose/install/)
+> [!IMPORTANT]
+> **Prerequisite:** The only required tool is [Docker Desktop](https://www.docker.com/products/docker-desktop/).
 
-### Running the Project
+### Getting Started
 
 1.  **Clone the repository:**
-
     ```shell
-    git clone https://github.com/your-username/personal-growth-platform.git
-    cd personal-growth-platform
+    git clone https://github.com/Opselon/MasirYar.git
+    cd MasirYar
     ```
 
-2.  **Run the project using Docker Compose:**
+2.  **Run the Setup Wizard:**
+    Run the script for the first time. An interactive Wizard will guide you through creating the `.env` configuration file.
 
-    ```shell
-    docker-compose up -d --build
+    **On Linux/macOS:**
+    ```bash
+    # Make the script executable (only once)
+    chmod +x run.sh
+    # Start all services
+    ./run.sh up
     ```
 
-    This will build and run all the services, databases, and other infrastructure components in Docker containers.
+    **On Windows (with PowerShell):**
+    ```powershell
+    # If needed, allow script execution for this session
+    # Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
+    # Start all services
+    .\run.ps1 up
+    ```
