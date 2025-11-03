@@ -48,6 +48,19 @@ services:
       timeout: 5s
       retries: 5
 
+  redis:
+    image: redis:7
+    container_name: personalgrowth_redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    restart: always
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
   # ------ Observability (مشاهده‌پذیری) ------
   loki:
@@ -115,6 +128,7 @@ services:
       - Jwt__Issuer=IdentityService
       - Jwt__Audience=IdentityService
       - Jwt__ExpirationMinutes=60
+      - RabbitMq__HostName=rabbitmq
     restart: always
     logging:
       driver: "json-file"
@@ -153,7 +167,7 @@ services:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_URLS=http://+:8080
-      - RabbitMq__HostName=rabbitmq
+      - ConnectionStrings__RabbitMqConnection=amqp://guest:guest@rabbitmq:5672
     restart: always
     logging:
       driver: "json-file"
@@ -197,9 +211,34 @@ services:
       options:
         labels: "service=frontend-web"
 
+  backup-service:
+    build:
+      context: ../ops/backup
+      dockerfile: Dockerfile
+    container_name: personalgrowth_backup_service
+    depends_on:
+      postgres-db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    environment:
+      - PG_HOST=postgres-db
+      - PG_USER=admin
+      - PG_PASSWORD=secret
+      - REDIS_HOST=redis
+      - BACKUP_DIR=/backups
+    volumes:
+      - backups_data:/backups
+    restart: always
+    logging:
+      driver: "json-file"
+      options:
+        labels: "service=backup-service"
+
 # بخش تعریف Volumeها (فضاهای ذخیره‌سازی دائمی)
 # داکر این Volumeها را مدیریت می‌کند و داده‌ها را در یک مکان امن روی سیستم میزبان ذخیره می‌کند.
 volumes:
   postgres_data:
   redis_data:
   grafana_data:
+  backups_data:

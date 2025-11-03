@@ -13,6 +13,9 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.Reflection;
 using System.Text;
+using HealthChecks.UI.Client;
+using Microsoft.AspNetCore.Diagnostics.HealthChecks;
+using Microsoft.Extensions.Diagnostics.HealthChecks;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -55,6 +58,21 @@ builder.Services.AddHangfireServer(options =>
 var jwtSettings = builder.Configuration.GetSection("Jwt");
 var secretKey = jwtSettings["SecretKey"] 
     ?? throw new InvalidOperationException("JWT SecretKey is not configured.");
+
+// ۷. پیکربندی Health Checks
+var rabbitMqConnectionString = builder.Configuration.GetConnectionString("RabbitMqConnection")
+    ?? throw new InvalidOperationException("RabbitMQ connection string is not configured.");
+
+builder.Services.AddHealthChecks()
+    .AddNpgSql(connectionString!, name: "database", failureStatus: HealthStatus.Unhealthy, tags: new[] { "database" })
+    .AddRabbitMQ(sp =>
+    {
+        var factory = new RabbitMQ.Client.ConnectionFactory()
+        {
+            Uri = new Uri(rabbitMqConnectionString)
+        };
+        return factory.CreateConnectionAsync().GetAwaiter().GetResult();
+    }, name: "rabbitmq", failureStatus: HealthStatus.Unhealthy, tags: new[] { "rabbitmq" });
 
 builder.Services.AddAuthentication(options =>
 {
@@ -119,7 +137,19 @@ app.MapGrpcService<IdentityGrpcService>();
 
 app.MapControllers();
 
-app.MapGet("/healthz", () => "OK");
+// Map Health Check Endpoints
+app.MapHealthChecks("/health/live", new HealthCheckOptions
+{
+    Predicate = _ => false, // No checks for liveness, just that the service is running
+    ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
+});
+
+app.MapHealthChecks("/health/ready", new HealthCheckOptions
+{
+    Predicate = check => check.Tags.Contains("database") && check.Tags.Contains("rabbitmq"),
+    ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
+});
+
 
 // تعریف کار پس‌زمینه برای ارسال پیام‌های Outbox
 RecurringJob.AddOrUpdate<IOutboxPublisherService>(

@@ -1,0 +1,15 @@
+# kubernetes/api-gateway/02-configmap.yaml
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: api-gateway-config
+  namespace: masiryar-production
+  labels:
+    app.kubernetes.io/name: api-gateway
+    app.kubernetes.io/instance: masiryar-api-gateway
+    app.kubernetes.io/part-of: masiryar
+data:
+  ASPNETCORE_ENVIRONMENT: "Production"
+  IdentityServiceUrl: "http://identity-service.masiryar-production.svc.cluster.local"
+  CoachingServiceUrl: "http://coaching-service.masiryar-production.svc.cluster.local"
+  NotificationServiceUrl: "http://notification-service.masiryar-production.svc.cluster.local"

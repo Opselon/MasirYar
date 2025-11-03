@@ -83,9 +83,7 @@ case "$1" in
         ;;
     test)
         echo "Running all tests..."
-        export DOTNET_ROOT=$HOME/.dotnet && \
-        export PATH=$PATH:$DOTNET_ROOT:$DOTNET_ROOT/tools && \
-        dotnet test src/IdentityService
+        ./run_tests.sh
         ;;
     *)
         print_help

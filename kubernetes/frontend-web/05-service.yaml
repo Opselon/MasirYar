@@ -1,0 +1,19 @@
+# kubernetes/frontend-web/05-service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: frontend-web
+  namespace: masiryar-production
+  labels:
+    app.kubernetes.io/name: frontend-web
+    app.kubernetes.io/instance: masiryar-frontend-web
+    app.kubernetes.io/part-of: masiryar
+spec:
+  type: ClusterIP
+  selector:
+    app.kubernetes.io/name: frontend-web
+    app.kubernetes.io/instance: masiryar-frontend-web
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 3000

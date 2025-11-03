@@ -93,9 +93,7 @@ switch ($Command) {
     }
     "test" {
         Write-Host "Running all tests..."
-        $env:DOTNET_ROOT = "$env:USERPROFILE\.dotnet"
-        $env:PATH = "$env:PATH;$env:DOTNET_ROOT;$env:DOTNET_ROOT\tools"
-        dotnet test src/IdentityService
+        ./run_tests.sh
     }
     default {
         Print-Help
