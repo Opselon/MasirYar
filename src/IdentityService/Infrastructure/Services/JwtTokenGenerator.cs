@@ -1,6 +1,6 @@
 // مسیر: src/IdentityService/Infrastructure/Services/JwtTokenGenerator.cs
 
-using Application.Contracts;
+using IdentityService.Application.Contracts;
 using Core.Entities;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;

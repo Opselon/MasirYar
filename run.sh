@@ -53,12 +53,12 @@ export $(grep -v '^#' .env | xargs)
 case "$1" in
     up)
         echo "Starting all services..."
-        docker-compose -f docker/docker-compose.yml up --build --exit-code-from migration-runner --remove-orphans
-        docker-compose -f docker/docker-compose.yml up -d
+        sudo docker compose -f docker/docker-compose.yml up --build --exit-code-from migration-runner --remove-orphans
+        sudo docker compose -f docker/docker-compose.yml up -d
         ;;
     down)
         echo "Stopping all services..."
-        docker-compose -f docker/docker-compose.yml down
+        sudo docker compose -f docker/docker-compose.yml down
         ;;
     logs)
         if [ -z "$2" ]; then
@@ -67,13 +67,13 @@ case "$1" in
             exit 1
         fi
         echo "Following logs for $2..."
-        docker-compose -f docker/docker-compose.yml logs -f $2
+        sudo docker compose -f docker/docker-compose.yml logs -f $2
         ;;
     prune)
         read -p "Are you sure you want to remove all containers, networks, and volumes? This action is irreversible. [y/N] " confirm
         if [[ $confirm =~ ^[Yy]$ ]]; then
             echo "Pruning the environment..."
-            docker-compose -f docker/docker-compose.yml down -v --remove-orphans
+            sudo docker compose -f docker/docker-compose.yml down -v --remove-orphans
         else
             echo "Prune operation cancelled."
         fi

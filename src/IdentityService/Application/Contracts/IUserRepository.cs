@@ -1,8 +1,8 @@
-// مسیر: src/IdentityService/Application/Interfaces/IUserRepository.cs
+// مسیر: src/IdentityService/Application/Contracts/IUserRepository.cs
 
 using Core.Entities;
 
-namespace Application.Interfaces;
+namespace IdentityService.Application.Contracts;
 
 /// <summary>
 /// رابط (Interface) برای دسترسی به داده‌های کاربران

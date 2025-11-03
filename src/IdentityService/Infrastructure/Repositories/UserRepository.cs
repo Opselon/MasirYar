@@ -1,6 +1,6 @@
 // مسیر: src/IdentityService/Infrastructure/Repositories/UserRepository.cs
 
-using Application.Interfaces;
+using IdentityService.Application.Contracts;
 using Core.Entities;
 using Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;

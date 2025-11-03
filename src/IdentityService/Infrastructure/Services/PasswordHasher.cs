@@ -1,6 +1,6 @@
 // مسیر: src/IdentityService/Infrastructure/Services/PasswordHasher.cs
 
-using Application.Contracts;
+using IdentityService.Application.Contracts;
 
 namespace Infrastructure.Services;
 

@@ -26,4 +26,8 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <using Include="IdentityService.Application.Contracts" />
+  </ItemGroup>
+
 </Project>

@@ -1,6 +1,6 @@
 // مسیر: src/IdentityService/Application/UseCases/UserRegistration/RegisterUserCommandHandler.cs
 
-using Application.Interfaces;
+using IdentityService.Application.Contracts;
 using Core.Entities;
 using MediatR;
 using System.Text.Json;

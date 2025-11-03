@@ -2,7 +2,7 @@
 using Api.Extensions;
 using Api.Filters;
 using Api.Services;
-using Application.Contracts;
+using IdentityService.Application.Contracts;
 using Hangfire;
 using Hangfire.PostgreSql;
 using Infrastructure.Persistence;
@@ -16,6 +16,7 @@ using System.Text;
 using HealthChecks.UI.Client;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
+using Infrastructure;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -28,11 +29,11 @@ var connectionString = builder.Configuration.GetConnectionString("DefaultConnect
 builder.Services.AddDbContext<IdentityDbContext>(options =>
     options.UseNpgsql(connectionString));
 
+builder.Services.AddInfrastructure();
+
 // ۳. ثبت سرویس‌های دامنه (Domain Services)
 builder.Services.AddScoped<IPasswordHasher, PasswordHasher>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
-builder.Services.AddScoped<IJournalRepository, JournalRepository>();
-builder.Services.AddScoped<IJournalAnalyzer, JournalAnalyzer>();
 builder.Services.AddSingleton<IJwtTokenGenerator, JwtTokenGenerator>();
 builder.Services.AddScoped<IOutboxPublisherService, OutboxPublisherService>();
 

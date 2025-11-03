@@ -3,7 +3,7 @@
 using Application.UseCases.UserRegistration;
 using Application.UseCases.UserLogin;
 using Api.DTOs;
-using Application.Interfaces;
+using IdentityService.Application.Contracts;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;

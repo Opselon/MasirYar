@@ -1,6 +1,6 @@
 // مسیر: src/IdentityService/Api/Services/IdentityGrpcService.cs
 
-using Application.Interfaces;
+using IdentityService.Application.Contracts;
 using Application.UseCases.UserLogin;
 using Application.UseCases.UserRegistration;
 using Grpc.Core;

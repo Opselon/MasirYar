@@ -1,6 +1,6 @@
 // مسیر: src/IdentityService/Application/Interfaces/IJournalAnalyzer.cs
 
-namespace Application.Interfaces;
+namespace IdentityService.Application.Contracts;
 
 /// <summary>
 /// رابط (Interface) برای تحلیل ژورنال‌ها
