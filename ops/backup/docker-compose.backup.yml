@@ -1,0 +1,49 @@
+# /ops/backup/docker-compose.backup.yml
+version: '3.8'
+
+services:
+  postgres-test:
+    image: postgres:16
+    container_name: backup_postgres_test
+    environment:
+      - POSTGRES_USER=testuser
+      - POSTGRES_PASSWORD=testpass
+      - POSTGRES_DB=testdb
+    ports:
+      - "5435:5432" # Use a different port to avoid conflicts
+    volumes:
+      - postgres_test_data:/var/lib/postgresql/data
+    restart: always
+
+  redis-test:
+    image: redis:7
+    container_name: backup_redis_test
+    ports:
+      - "6381:6379" # Use a different port
+    restart: always
+
+  backup-service:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: masiryar_backup_test
+    depends_on:
+      - postgres-test
+      - redis-test
+    environment:
+      - PG_HOST=postgres-test
+      - PG_PORT=5432
+      - PG_USER=testuser
+      - PG_PASSWORD=testpass
+      - REDIS_HOST=redis-test
+      - REDIS_PORT=6379
+      - FILE_PATHS=/testdata/logs,/testdata/config # Example paths inside the container
+      - BACKUP_DIR=/backups
+      - RETENTION_DAYS=3
+    volumes:
+      - backup_test_data:/backups
+      - ./testdata:/testdata # Mount a local testdata directory
+
+volumes:
+  postgres_test_data:
+  backup_test_data:
