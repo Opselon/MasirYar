@@ -1,6 +1,7 @@
 // مسیر: src/IdentityService/Infrastructure/Services/JwtTokenGenerator.cs
 
-using Application.Interfaces;
+using Application.Contracts;
+using Core.Entities;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
@@ -28,15 +29,15 @@ public class JwtTokenGenerator : IJwtTokenGenerator
         _expirationMinutes = int.Parse(configuration["Jwt:ExpirationMinutes"] ?? "60");
     }
 
-    public string GenerateToken(Guid userId, string username)
+    public string GenerateToken(User user)
     {
         var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_secretKey));
         var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
 
         var claims = new[]
         {
-            new Claim(ClaimTypes.NameIdentifier, userId.ToString()),
-            new Claim(ClaimTypes.Name, username),
+            new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
+            new Claim(ClaimTypes.Name, user.Username),
             new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
         };
 

@@ -2,7 +2,7 @@
 using Api.Extensions;
 using Api.Filters;
 using Api.Services;
-using Application.Interfaces;
+using Application.Contracts;
 using Hangfire;
 using Hangfire.PostgreSql;
 using Infrastructure.Persistence;
