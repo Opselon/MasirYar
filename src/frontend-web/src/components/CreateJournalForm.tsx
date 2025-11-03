@@ -3,6 +3,7 @@
 
 import { useCreateJournal } from "@/hooks/useCreateJournal";
 import { useState } from "react";
+import { Button } from "./ui/atoms/Button"; // Import the new Button component
 
 export default function CreateJournalForm() {
   const [title, setTitle] = useState("");
@@ -21,35 +22,34 @@ export default function CreateJournalForm() {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="p-4 border rounded-md shadow-sm mb-8">
-      <h2 className="text-xl font-semibold mb-4">Create New Journal</h2>
+    <form onSubmit={handleSubmit} className="p-4 border rounded-md shadow-sm mb-8 bg-gray-50">
+      <h2 className="text-xl font-semibold mb-4">ایجاد یادداشت جدید</h2>
       <div className="flex flex-col space-y-4">
         <input
           type="text"
           value={title}
           onChange={(e) => setTitle(e.target.value)}
-          placeholder="Journal Title"
+          placeholder="عنوان یادداشت"
           className="p-2 border rounded-md"
           disabled={createJournalMutation.isPending}
         />
         <textarea
           value={content}
           onChange={(e) => setContent(e.target.value)}
-          placeholder="What's on your mind?"
+          placeholder="چه چیزی در ذهن دارید؟"
           className="p-2 border rounded-md"
           rows={4}
           disabled={createJournalMutation.isPending}
         />
-        <button
+        <Button
           type="submit"
-          className="p-2 bg-blue-500 text-white rounded-md disabled:bg-gray-400"
           disabled={createJournalMutation.isPending}
         >
-          {createJournalMutation.isPending ? "Creating..." : "Create Journal"}
-        </button>
+          {createJournalMutation.isPending ? "در حال ایجاد..." : "ایجاد یادداشت"}
+        </Button>
         {createJournalMutation.isError && (
           <p className="text-red-500">
-            Error: {createJournalMutation.error.message}
+            خطا: {createJournalMutation.error.message}
           </p>
         )}
       </div>
