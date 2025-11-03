@@ -1,6 +1,6 @@
 // مسیر: src/IdentityService/Application/UseCases/Journals/CreateJournal/CreateJournalCommandHandler.cs
 
-using Application.Interfaces;
+using IdentityService.Application.Contracts;
 using Core.Entities;
 using Hangfire;
 using MediatR;

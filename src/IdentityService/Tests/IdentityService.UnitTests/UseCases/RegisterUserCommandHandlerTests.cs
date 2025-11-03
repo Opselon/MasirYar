@@ -1,8 +1,6 @@
-using Application.Contracts;
+using IdentityService.Application.Contracts;
 using Application.UseCases.UserRegistration;
 using Core.Entities;
-using Infrastructure.Persistence;
-using Microsoft.EntityFrameworkCore;
 using Moq;
 using Xunit;
 
@@ -11,15 +9,12 @@ namespace IdentityService.UnitTests.UseCases;
 public class RegisterUserCommandHandlerTests
 {
     private readonly Mock<IPasswordHasher> _passwordHasherMock;
-    private readonly IdentityDbContext _dbContext;
+    private readonly Mock<IUserRepository> _userRepositoryMock;
 
     public RegisterUserCommandHandlerTests()
     {
         _passwordHasherMock = new Mock<IPasswordHasher>();
-        var options = new DbContextOptionsBuilder<IdentityDbContext>()
-            .UseInMemoryDatabase(databaseName: Guid.NewGuid().ToString())
-            .Options;
-        _dbContext = new IdentityDbContext(options);
+        _userRepositoryMock = new Mock<IUserRepository>();
     }
 
     [Fact]
@@ -27,7 +22,7 @@ public class RegisterUserCommandHandlerTests
     {
         // Arrange
         _passwordHasherMock.Setup(x => x.HashPassword("Password123")).Returns("hashed.password");
-        var handler = new RegisterUserCommandHandler(_dbContext, _passwordHasherMock.Object);
+        var handler = new RegisterUserCommandHandler(_userRepositoryMock.Object, _passwordHasherMock.Object);
         var command = new RegisterUserCommand { Username = "testuser", Email = "test@example.com", Password = "Password123" };
 
         // Act
@@ -35,46 +30,41 @@ public class RegisterUserCommandHandlerTests
 
         // Assert
         Assert.NotEqual(Guid.Empty, result);
-        var user = await _dbContext.Users.FindAsync(result);
-        Assert.NotNull(user);
-        Assert.Equal("testuser", user.Username);
+        _userRepositoryMock.Verify(x => x.AddAsync(It.Is<User>(u => u.Username == "testuser"), CancellationToken.None), Times.Once);
+        _userRepositoryMock.Verify(x => x.SaveChangesAsync(CancellationToken.None), Times.Once);
     }
 
     [Fact]
     public async Task Handle_ShouldThrowException_WhenUsernameAlreadyExists()
     {
         // Arrange
-        var existingUser = User.Create("testuser", "existing@example.com", "hashed.password");
-        await _dbContext.Users.AddAsync(existingUser);
-        await _dbContext.SaveChangesAsync();
-
-        var handler = new RegisterUserCommandHandler(_dbContext, _passwordHasherMock.Object);
+        var existingUser = new User { Id = Guid.NewGuid(), Username = "testuser", Email = "existing@example.com", PasswordHash = "hashed.password" };
+        _userRepositoryMock.Setup(x => x.FindByUsernameOrEmailAsync("testuser", "new@example.com", CancellationToken.None)).ReturnsAsync(existingUser);
+        var handler = new RegisterUserCommandHandler(_userRepositoryMock.Object, _passwordHasherMock.Object);
         var command = new RegisterUserCommand { Username = "testuser", Email = "new@example.com", Password = "Password123" };
 
         // Act & Assert
-        await Assert.ThrowsAsync<Exception>(() => handler.Handle(command, CancellationToken.None));
+        await Assert.ThrowsAsync<InvalidOperationException>(() => handler.Handle(command, CancellationToken.None));
     }
 
     [Fact]
     public async Task Handle_ShouldThrowException_WhenEmailAlreadyExists()
     {
         // Arrange
-        var existingUser = User.Create("existinguser", "test@example.com", "hashed.password");
-        await _dbContext.Users.AddAsync(existingUser);
-        await _dbContext.SaveChangesAsync();
-
-        var handler = new RegisterUserCommandHandler(_dbContext, _passwordHasherMock.Object);
+        var existingUser = new User { Id = Guid.NewGuid(), Username = "existinguser", Email = "test@example.com", PasswordHash = "hashed.password" };
+        _userRepositoryMock.Setup(x => x.FindByUsernameOrEmailAsync("newuser", "test@example.com", CancellationToken.None)).ReturnsAsync(existingUser);
+        var handler = new RegisterUserCommandHandler(_userRepositoryMock.Object, _passwordHasherMock.Object);
         var command = new RegisterUserCommand { Username = "newuser", Email = "test@example.com", Password = "Password123" };
 
         // Act & Assert
-        await Assert.ThrowsAsync<Exception>(() => handler.Handle(command, CancellationToken.None));
+        await Assert.ThrowsAsync<InvalidOperationException>(() => handler.Handle(command, CancellationToken.None));
     }
 
     [Fact]
     public async Task Handle_ShouldCallPasswordHasher_WithCorrectPassword()
     {
         // Arrange
-        var handler = new RegisterUserCommandHandler(_dbContext, _passwordHasherMock.Object);
+        var handler = new RegisterUserCommandHandler(_userRepositoryMock.Object, _passwordHasherMock.Object);
         var command = new RegisterUserCommand { Username = "testuser", Email = "test@example.com", Password = "Password123" };
 
         // Act

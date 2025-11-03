@@ -1,8 +1,6 @@
-using Application.Contracts;
+using IdentityService.Application.Contracts;
 using Application.UseCases.UserLogin;
 using Core.Entities;
-using Infrastructure.Persistence;
-using Microsoft.EntityFrameworkCore;
 using Moq;
 using Xunit;
 
@@ -11,16 +9,13 @@ namespace IdentityService.UnitTests.UseCases;
 public class LoginUserCommandHandlerTests
 {
     private readonly Mock<IJwtTokenGenerator> _jwtTokenGeneratorMock;
-    private readonly IdentityDbContext _dbContext;
+    private readonly Mock<IUserRepository> _userRepositoryMock;
     private readonly Mock<IPasswordHasher> _passwordHasherMock;
 
     public LoginUserCommandHandlerTests()
     {
         _jwtTokenGeneratorMock = new Mock<IJwtTokenGenerator>();
-        var options = new DbContextOptionsBuilder<IdentityDbContext>()
-            .UseInMemoryDatabase(databaseName: Guid.NewGuid().ToString())
-            .Options;
-        _dbContext = new IdentityDbContext(options);
+        _userRepositoryMock = new Mock<IUserRepository>();
         _passwordHasherMock = new Mock<IPasswordHasher>();
     }
 
@@ -28,14 +23,13 @@ public class LoginUserCommandHandlerTests
     public async Task Handle_ShouldReturnLoginResult_WhenCredentialsAreValid()
     {
         // Arrange
-        var user = User.Create("testuser", "test@example.com", "hashed.password");
-        await _dbContext.Users.AddAsync(user);
-        await _dbContext.SaveChangesAsync();
+        var user = new User { Id = Guid.NewGuid(), Username = "testuser", Email = "test@example.com", PasswordHash = "hashed.password" };
+        _userRepositoryMock.Setup(x => x.FindByUsernameAsync("testuser", CancellationToken.None)).ReturnsAsync(user);
 
-        _passwordHasherMock.Setup(x => x.VerifyPassword("hashed.password", "Password123")).Returns(true);
+        _passwordHasherMock.Setup(x => x.VerifyPassword("Password123", "hashed.password")).Returns(true);
         _jwtTokenGeneratorMock.Setup(x => x.GenerateToken(It.IsAny<User>())).Returns("mock_jwt_token");
 
-        var handler = new LoginUserCommandHandler(_dbContext, _jwtTokenGeneratorMock.Object, _passwordHasherMock.Object);
+        var handler = new LoginUserCommandHandler(_userRepositoryMock.Object, _passwordHasherMock.Object, _jwtTokenGeneratorMock.Object);
         var command = new LoginUserCommand { Username = "testuser", Password = "Password123" };
 
         // Act
@@ -51,16 +45,15 @@ public class LoginUserCommandHandlerTests
     public async Task Handle_ShouldThrowException_WhenPasswordIsInvalid()
     {
         // Arrange
-        var user = User.Create("testuser", "test@example.com", "hashed.password");
-        await _dbContext.Users.AddAsync(user);
-        await _dbContext.SaveChangesAsync();
+        var user = new User { Id = Guid.NewGuid(), Username = "testuser", Email = "test@example.com", PasswordHash = "hashed.password" };
+        _userRepositoryMock.Setup(x => x.FindByUsernameAsync("testuser", CancellationToken.None)).ReturnsAsync(user);
 
-        _passwordHasherMock.Setup(x => x.VerifyPassword("hashed.password", "WrongPassword")).Returns(false);
+        _passwordHasherMock.Setup(x => x.VerifyPassword("WrongPassword", "hashed.password")).Returns(false);
 
-        var handler = new LoginUserCommandHandler(_dbContext, _jwtTokenGeneratorMock.Object, _passwordHasherMock.Object);
+        var handler = new LoginUserCommandHandler(_userRepositoryMock.Object, _passwordHasherMock.Object, _jwtTokenGeneratorMock.Object);
         var command = new LoginUserCommand { Username = "testuser", Password = "WrongPassword" };
 
         // Act & Assert
-        await Assert.ThrowsAsync<Exception>(() => handler.Handle(command, CancellationToken.None));
+        await Assert.ThrowsAsync<UnauthorizedAccessException>(() => handler.Handle(command, CancellationToken.None));
     }
 }

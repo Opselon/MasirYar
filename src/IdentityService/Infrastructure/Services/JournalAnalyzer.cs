@@ -1,6 +1,6 @@
 // مسیر: src/IdentityService/Infrastructure/Services/JournalAnalyzer.cs
 
-using Application.Interfaces;
+using IdentityService.Application.Contracts;
 using Microsoft.Extensions.Logging;
 
 namespace Infrastructure.Services;

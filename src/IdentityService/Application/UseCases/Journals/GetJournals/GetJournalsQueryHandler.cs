@@ -1,6 +1,6 @@
 // مسیر: src/IdentityService/Application/UseCases/Journals/GetJournals/GetJournalsQueryHandler.cs
 
-using Application.Interfaces;
+using IdentityService.Application.Contracts;
 using MediatR;
 
 namespace Application.UseCases.Journals.GetJournals;

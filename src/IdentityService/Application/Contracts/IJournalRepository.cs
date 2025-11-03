@@ -2,7 +2,7 @@
 
 using Core.Entities;
 
-namespace Application.Interfaces;
+namespace IdentityService.Application.Contracts;
 
 /// <summary>
 /// رابط (Interface) برای دسترسی به داده‌های ژورنال‌ها

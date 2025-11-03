@@ -1,6 +1,6 @@
 // مسیر: src/IdentityService/Application/UseCases/UserLogin/LoginUserCommandHandler.cs
 
-using Application.Interfaces;
+using IdentityService.Application.Contracts;
 using MediatR;
 
 namespace Application.UseCases.UserLogin;
@@ -44,7 +44,7 @@ public class LoginUserCommandHandler : IRequestHandler<LoginUserCommand, LoginUs
         }
 
         // تولید JWT Token
-        var token = _jwtTokenGenerator.GenerateToken(user.Id, user.Username);
+        var token = _jwtTokenGenerator.GenerateToken(user);
 
         // برگرداندن نتیجه
         return new LoginUserResult
