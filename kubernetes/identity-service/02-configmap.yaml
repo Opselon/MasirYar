@@ -1,0 +1,16 @@
+# kubernetes/identity-service/02-configmap.yaml
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: identity-service-config
+  namespace: masiryar-production
+  labels:
+    app.kubernetes.io/name: identity-service
+    app.kubernetes.io/instance: masiryar-identity-service
+    app.kubernetes.io/part-of: masiryar
+data:
+  ASPNETCORE_ENVIRONMENT: "Production"
+  Jwt__Issuer: "https://masiryar.com"
+  Jwt__Audience: "https://masiryar.com"
+  Logging__LogLevel__Default: "Information"
+  Logging__LogLevel__Microsoft.AspNetCore: "Warning"

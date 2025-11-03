@@ -1,0 +1,19 @@
+# kubernetes/api-gateway/05-service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: api-gateway
+  namespace: masiryar-production
+  labels:
+    app.kubernetes.io/name: api-gateway
+    app.kubernetes.io/instance: masiryar-api-gateway
+    app.kubernetes.io/part-of: masiryar
+spec:
+  type: ClusterIP
+  selector:
+    app.kubernetes.io/name: api-gateway
+    app.kubernetes.io/instance: masiryar-api-gateway
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 8080

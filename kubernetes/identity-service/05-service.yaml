@@ -1,0 +1,19 @@
+# kubernetes/identity-service/05-service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: identity-service
+  namespace: masiryar-production
+  labels:
+    app.kubernetes.io/name: identity-service
+    app.kubernetes.io/instance: masiryar-identity-service
+    app.kubernetes.io/part-of: masiryar
+spec:
+  type: ClusterIP
+  selector:
+    app.kubernetes.io/name: identity-service
+    app.kubernetes.io/instance: masiryar-identity-service
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 8080

@@ -1,0 +1,14 @@
+# kubernetes/frontend-web/02-configmap.yaml
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: frontend-web-config
+  namespace: masiryar-production
+  labels:
+    app.kubernetes.io/name: frontend-web
+    app.kubernetes.io/instance: masiryar-frontend-web
+    app.kubernetes.io/part-of: masiryar
+data:
+  # This value is a placeholder and will be replaced by the public-facing
+  # URL of the API gateway in the CI/CD pipeline.
+  NEXT_PUBLIC_API_URL: "https://api.masiryar.com" # Placeholder
