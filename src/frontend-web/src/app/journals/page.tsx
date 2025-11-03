@@ -20,7 +20,7 @@ export default async function JournalsPage() {
 
   return (
     <main className="p-8">
-      <h1 className="text-2xl font-bold mb-4">My Journals</h1>
+      <h1 className="text-2xl font-bold mb-4">یادداشت‌های من</h1>
 
       <CreateJournalForm />
 
