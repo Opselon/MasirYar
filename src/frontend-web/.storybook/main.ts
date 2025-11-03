@@ -16,6 +16,24 @@ const config: StorybookConfig = {
   docs: {
     autodocs: "tag",
   },
-  staticDirs: ["../public"], // For static assets like images
+  staticDirs: ["../public"],
+  webpackFinal: async (config) => {
+    config.module = config.module || {};
+    config.module.rules = config.module.rules || [];
+    config.module.rules.push({
+      test: /\.css$/,
+      use: [
+        'style-loader',
+        {
+          loader: 'css-loader',
+          options: {
+            importLoaders: 1,
+          },
+        },
+        'postcss-loader',
+      ],
+    });
+    return config;
+  },
 };
 export default config;
